@@ -7,6 +7,9 @@
 
 namespace naivebayes {
 
+/**
+ * Convert the raw dataset so that it can be stored properly.
+ */
 class DataConverter {
  public:
   DataConverter(const std::string& file_path, size_t image_size);
