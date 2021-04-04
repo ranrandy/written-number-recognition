@@ -23,7 +23,7 @@ std::istream& operator>>(std::istream& in, DataConverter& data_converter) {
   std::ifstream data_file(data_converter.GetFilePath());
 
   std::vector<std::vector<WrittenNumber::PixelColor>> image_vector;
-  std::string image_class;
+  size_t image_class;
   std::string image_str;
 
   size_t line_count = 1;
@@ -31,7 +31,7 @@ std::istream& operator>>(std::istream& in, DataConverter& data_converter) {
     std::string line;
     while (getline(data_file, line)) {
       if (line_count % (data_converter.GetImageSize() + 1) == 1) {
-        image_class = line;
+        image_class = stoi(line);
       } else {
         std::vector<WrittenNumber::PixelColor> row_vector;
         for (char character : line) {

@@ -3,10 +3,12 @@
 #include <map>
 #include <set>
 
+#include "core/data_converter.h"
 #include "written_number.h"
-#include "pixel.h"
 
 namespace naivebayes {
+
+using std::vector;
 
 /**
  * Process the data to get probabilities for P(class = c) and
@@ -14,20 +16,20 @@ namespace naivebayes {
  */
 class DataProcessor {
 public:
-  DataProcessor(const std::vector<WrittenNumber>& written_numbers);
+  DataProcessor(const DataConverter& data_converter);
 
-  const std::map<std::string, double>& GetClassProbability() const;
-  const std::map<Pixel, double>& GetPixelProbability() const;
+  const std::map<size_t , double>& GetClassProbability() const;
+  vector<vector<vector<vector<double>>>> GetPixelProbability() const;
 
 private:
   void CalculateProbabilityForClasses(
-      const std::vector<WrittenNumber>& written_numbers);
+      const DataConverter& data_converter);
 
   void CalculateProbabilityForPixels(
-      const std::vector<WrittenNumber>& written_numbers);
+      const DataConverter& data_converter);
 
-  std::map<std::string, double> image_class_probabilities_;
-  std::map<Pixel, double> pixel_probabilities_;
+  std::map<size_t, double> image_class_probabilities_;
+  vector<vector<vector<vector<double>>>> pixel_ps_vector;
 };
 
 } // namespace naivebayes

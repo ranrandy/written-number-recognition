@@ -15,13 +15,13 @@ TEST_CASE("Calculate P(class = c)") {
       "/data/data_for_test.txt", 28);
   std::cin >> data_converter;
 
-  DataProcessor data_processor(data_converter.GetDataset());
-  std::map<std::string, double> image_class_probabilities;
+  DataProcessor data_processor(data_converter);
+  std::map<size_t , double> image_class_probabilities;
   auto it = data_processor.GetClassProbability().begin();
   while (it != data_processor.GetClassProbability().end()) {
     image_class_probabilities[it->first] = it->second;
     it++;
   }
-  REQUIRE(image_class_probabilities["4"] == Approx(0.667).epsilon(0.01));
-  REQUIRE(image_class_probabilities["6"] == Approx(0.333).epsilon(0.01));
+  REQUIRE(image_class_probabilities[4] == Approx(0.667).epsilon(0.01));
+  REQUIRE(image_class_probabilities[6] == Approx(0.333).epsilon(0.01));
 }

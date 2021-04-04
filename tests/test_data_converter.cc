@@ -8,12 +8,12 @@ using naivebayes::DataConverter;
 using naivebayes::WrittenNumber;
 
 TEST_CASE("Overload >> operator to read the data") {
-  DataConverter dataConverter(
+  DataConverter data_converter(
       "/Users/lirunfeng/cinder_master/my-projects/naive-bayes-ranrandy/"
       "/data/data_for_test.txt", 28);
-  std::cin >> dataConverter;
+  std::cin >> data_converter;
 
-  REQUIRE(dataConverter.GetDataset()[2].GetImageClass() == "4");
-  REQUIRE(dataConverter.GetDataset()[1].GetImageVector().at(17).at(17) ==
+  REQUIRE(data_converter.GetDataset()[2].GetImageClass() == 4);
+  REQUIRE(data_converter.GetDataset()[1].GetImageVector().at(2).at(16) ==
           WrittenNumber::PixelColor::kBlack);
 }
