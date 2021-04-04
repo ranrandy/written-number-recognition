@@ -16,14 +16,14 @@ class WrittenNumber {
      kBlack
   };
 
-  WrittenNumber(char image_class,
+  WrittenNumber(const std::string& image_class,
                 const std::vector<std::vector<PixelColor>>& image_vector);
 
-  char GetImageClass() const;
+  const std::string& GetImageClass() const;
   const std::vector<std::vector<PixelColor>>& GetImageVector() const;
 
  private:
-  char image_class_;
+  std::string image_class_;
   std::vector<std::vector<PixelColor>> image_vector_;
 };
 

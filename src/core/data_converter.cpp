@@ -21,16 +21,17 @@ const std::vector<WrittenNumber>& DataConverter::GetDataset() const {
 
 std::istream& operator>>(std::istream& in, DataConverter& data_converter) {
   std::ifstream data_file(data_converter.GetFilePath());
+
   std::vector<std::vector<WrittenNumber::PixelColor>> image_vector;
-  char image_class;
+  std::string image_class;
+  std::string image_str;
 
-  std::string line;
   size_t line_count = 1;
-
   if (data_file.is_open()) {
+    std::string line;
     while (getline(data_file, line)) {
       if (line_count % (data_converter.GetImageSize() + 1) == 1) {
-        image_class = line.at(0);
+        image_class = line;
       } else {
         std::vector<WrittenNumber::PixelColor> row_vector;
         for (char character : line) {
@@ -49,9 +50,11 @@ std::istream& operator>>(std::istream& in, DataConverter& data_converter) {
         WrittenNumber written_number(image_class, image_vector);
         data_converter.dataset_.push_back(written_number);
         image_vector.clear();
-        line = "";
+        image_str.clear();
       }
       line_count++;
+      image_str += line;
+      line.clear();
     }
   }
   data_file.close();

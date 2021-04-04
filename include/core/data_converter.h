@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+
 #include "written_number.h"
 
 namespace naivebayes {

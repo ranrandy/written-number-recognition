@@ -3,13 +3,13 @@
 namespace naivebayes {
 
 WrittenNumber::WrittenNumber(
-    char image_class,
+    const std::string& image_class,
     const std::vector<std::vector<PixelColor>>& image_vector) {
   image_class_ = image_class;
   image_vector_ = image_vector;
 }
 
-char WrittenNumber::GetImageClass() const {
+const std::string& WrittenNumber::GetImageClass() const {
   return image_class_;
 }
 
