@@ -7,6 +7,14 @@ DataConverter::DataConverter(const std::string& file_path, size_t image_size) {
   image_size_ = image_size;
 }
 
+size_t DataConverter::GetImageClassCount() const {
+  return image_classes_.size();
+}
+
+size_t DataConverter::GetGreatestWrittenNumber() const {
+  return *max_element(image_classes_.begin(), image_classes_.end());
+}
+
 size_t DataConverter::GetImageSize() const {
   return image_size_;
 }
@@ -31,6 +39,7 @@ std::istream& operator>>(std::istream& in, DataConverter& data_converter) {
     while (getline(data_file, line)) {
       if (line_count % (data_converter.GetImageSize() + 1) == 1) {
         image_class = data_converter.ConvertToClass(line);
+        data_converter.image_classes_.insert(image_class);
       } else {
         image_vector.push_back(data_converter.ConvertToPixels(line));
       }

@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <set>
 
 #include "written_number.h"
 
@@ -13,11 +15,11 @@ namespace naivebayes {
 class DataConverter {
  public:
   const size_t pixel_color_count_ = 3;
-  const size_t image_class_count_ = 10;
-  const int greatest_written_number = 9;
 
   DataConverter(const std::string& file_path, size_t image_size);
 
+  size_t GetImageClassCount() const;
+  size_t GetGreatestWrittenNumber() const;
   size_t GetImageSize() const;
 
   const std::string& GetFilePath() const;
@@ -38,6 +40,7 @@ class DataConverter {
 
   size_t image_size_;
   std::string file_path_;
+  std::set<int> image_classes_;
   std::vector<WrittenNumber> dataset_;
 };
 

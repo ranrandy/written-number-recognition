@@ -15,7 +15,8 @@ using std::vector;
  */
 class DataProcessor {
 public:
-  DataProcessor(const DataConverter& data_converter);
+  DataProcessor(const DataConverter& data_converter,
+                double laplace_parameter = 0);
 
   /**
    * Gets a map containing P(class = c) data.
@@ -27,13 +28,14 @@ public:
    * Gets a 4D vector containing P(F_{i, j} = f | class = c) data.
    * @return a vector consisting of P(F_{i, j} = f | class = c)
    */
-  vector<vector<vector<vector<double>>>> GetPixelProbability() const;
+  const vector<vector<vector<vector<double>>>>& GetPixelProbability() const;
 
 private:
-  const double laplace_parameter = 10.5;
-
   void CalculateProbabilityForClasses(const DataConverter& data_converter);
   void CalculateProbabilityForPixels(const DataConverter& data_converter);
+
+  // Parameter k used for laplace smoothing
+  double laplace_parameter_;
 
   // P(class = c)
   std::map<int, double> class_probabilities_;
