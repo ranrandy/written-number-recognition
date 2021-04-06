@@ -15,6 +15,11 @@ using std::vector;
  */
 class DataProcessor {
 public:
+  /**
+   * Constructor for processing the dataset to get the probabilities info.
+   * @param data_converter a data converter containing preprocessed dataset
+   * @param laplace_parameter the laplace smoothing parameter for processing
+   */
   DataProcessor(const DataConverter& data_converter,
                 double laplace_parameter = 0);
 
@@ -31,21 +36,41 @@ public:
   const vector<vector<vector<vector<double>>>>& GetPixelProbability() const;
 
 private:
+  /**
+   * Counts the number of each written number class in the dataset.
+   * @param data_converter a data converter containing preprocessed dataset
+   */
   void CountClasses(const DataConverter& data_converter);
+  
+  /**
+   * Calculates P(class = c) for each written number class.
+   * @param data_converter a data converter containing preprocessed dataset
+   */
   void CalculateProbabilityForClasses(const DataConverter& data_converter);
+  
+  /**
+   * Initiates each P(F_{i, j} = f | class = c) with 
+   * k / (pixel_color_count * k + # classes belonging to class c).
+   * @param data_converter a data converter containing preprocessed dataset
+   */
   void InitiatePixelProbabilities(const DataConverter& data_converter);
+  
+  /**
+   * Calculates P(F_{i, j} = f | class = c) for each point and class.
+   * @param data_converter a data converter containing preprocessed dataset
+   */
   void CalculateProbabilityForPixels(const DataConverter& data_converter);
 
-  // Parameter k used for laplace smoothing
+  // Parameter k for laplace smoothing
   double laplace_parameter_;
 
   // The number of each class in the dataset
   std::map<int, size_t> class_count_;
 
-  // P(class = c)
+  // A map of P(class = c)
   std::map<int, double> class_probabilities_;
 
-  // P(F_{i, j} = f | class = c)
+  // A vector of P(F_{i, j} = f | class = c)
   vector<vector<vector<vector<double>>>> pixel_probabilities_;
 };
 
