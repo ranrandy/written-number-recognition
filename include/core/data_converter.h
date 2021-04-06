@@ -12,6 +12,10 @@ namespace naivebayes {
  */
 class DataConverter {
  public:
+  const size_t pixel_color_count_ = 3;
+  const size_t image_class_count_ = 10;
+  const int greatest_written_number = 9;
+
   DataConverter(const std::string& file_path, size_t image_size);
 
   size_t GetImageSize() const;

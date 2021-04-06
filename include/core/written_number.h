@@ -19,11 +19,11 @@ class WrittenNumber {
   WrittenNumber(size_t image_class,
                 const std::vector<std::vector<PixelColor>>& image_vector);
 
-  size_t GetImageClass() const;
+  int GetImageClass() const;
   const std::vector<std::vector<PixelColor>>& GetImageVector() const;
 
  private:
-  size_t image_class_;
+  int image_class_;
   std::vector<std::vector<PixelColor>> image_vector_;
 };
 

@@ -9,7 +9,7 @@ WrittenNumber::WrittenNumber(
   image_vector_ = image_vector;
 }
 
-size_t WrittenNumber::GetImageClass() const {
+int WrittenNumber::GetImageClass() const {
   return image_class_;
 }
 
