@@ -84,4 +84,36 @@ void DataProcessor::CalculateProbabilityForPixels(
   }
 }
 
+std::ostream &operator<<(std::ostream& output_file, 
+                         DataProcessor& data_processor) {
+  // Outputs prior probabilities first.
+  for (auto & it : data_processor.class_probabilities_) {
+    output_file << it.first << " " << it.second << std::endl; 
+  }
+  
+  // Inserts a line between prior probabilities and conditional probabilities.
+  output_file << std::endl;
+  
+  size_t row_total = data_processor.pixel_probabilities_.size();
+  size_t column_total = data_processor.pixel_probabilities_[0].size();
+  size_t color_total = data_processor.pixel_probabilities_[0][0].size();
+  size_t class_total = data_processor.pixel_probabilities_[0][0][0].size();
+  // Outputs conditional probabilities.
+  for (size_t class_count = 0; class_count < class_total; class_count++) {
+    output_file << class_count << ": " << std::endl;
+    for (size_t row = 0; row < row_total; row++) {
+      for (size_t column = 0; column < column_total; column++) {
+        for (size_t color_count = 0; color_count < color_total; color_count++) {
+          output_file << std::fixed << std::setprecision(6) << 
+              data_processor.pixel_probabilities_[row][column][color_count]
+                                                 [class_count] << "\t";
+        }
+        output_file << std::endl;
+      }
+    }
+    output_file << std::endl;
+  }
+  return output_file;
+}
+
 } // namespace naivebayes

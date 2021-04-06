@@ -34,6 +34,9 @@ public:
    * @return a vector consisting of P(F_{i, j} = f | class = c)
    */
   const vector<vector<vector<vector<double>>>>& GetPixelProbability() const;
+  
+  friend std::ostream &operator<<(std::ostream& output_file,
+                                  DataProcessor& data_processor);
 
 private:
   /**
