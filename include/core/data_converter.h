@@ -16,13 +16,11 @@ class DataConverter {
  public:
   const size_t pixel_color_count_ = 3;
 
-  DataConverter(const std::string& file_path, size_t image_size);
+  DataConverter();
 
   size_t GetImageClassCount() const;
   size_t GetGreatestWrittenNumber() const;
   size_t GetImageSize() const;
-
-  const std::string& GetFilePath() const;
 
   const std::vector<WrittenNumber>& GetDataset() const;
 
@@ -39,7 +37,6 @@ class DataConverter {
       const std::string& line);
 
   size_t image_size_;
-  std::string file_path_;
   std::set<int> image_classes_;
   std::vector<WrittenNumber> dataset_;
 };

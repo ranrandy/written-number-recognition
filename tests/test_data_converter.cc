@@ -1,19 +1,31 @@
 #include <catch2/catch.hpp>
-#include <iostream>
 
 #include "core/data_converter.h"
 #include "core/written_number.h"
 
 using naivebayes::DataConverter;
 using naivebayes::WrittenNumber;
+using std::cout;
+using std::endl;
 
 TEST_CASE("Overload >> operator to read the data") {
-  DataConverter data_converter(
-      "/Users/lirunfeng/cinder_master/my-projects/naive-bayes-ranrandy/"
-      "/data/data_for_test.txt", 28);
-  std::cin >> data_converter;
-
-  REQUIRE(data_converter.GetDataset()[2].GetImageClass() == 4);
-  REQUIRE(data_converter.GetDataset()[1].GetImageVector().at(2).at(16) ==
-          WrittenNumber::PixelColor::kBlack);
+  DataConverter data_converter;
+  SECTION("Normal image size data (size = 28)") {
+    std::ifstream input_file("/Users/lirunfeng/cinder_master/my-projects/"
+                             "naive-bayes-ranrandy/data/test_normal_images.txt");
+    input_file >> data_converter;
+    REQUIRE(data_converter.GetDataset()[2].GetImageClass() == 4);
+    REQUIRE(data_converter.GetDataset()[1].GetImageVector().at(3).at(18) ==
+            WrittenNumber::PixelColor::kBlack);
+  }
+  
+  SECTION("Arbitrary image size data (size = 20)") {
+    std::ifstream input_file("/Users/lirunfeng/cinder_master/my-projects/"
+                             "naive-bayes-ranrandy/data/test_smaller_images"
+                             ".txt");
+    input_file >> data_converter;
+    REQUIRE(data_converter.GetDataset()[1].GetImageClass() == 1);
+    REQUIRE(data_converter.GetDataset()[1].GetImageVector().at(10).at(13) ==
+            WrittenNumber::PixelColor::kBlack);
+  }
 }
