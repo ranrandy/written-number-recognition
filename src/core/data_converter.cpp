@@ -22,43 +22,58 @@ const std::vector<WrittenNumber>& DataConverter::GetDataset() const {
 std::istream& operator>>(std::istream& in, DataConverter& data_converter) {
   std::ifstream data_file(data_converter.GetFilePath());
 
+  int image_class;
   std::vector<std::vector<WrittenNumber::PixelColor>> image_vector;
-  size_t image_class;
-  std::string image_str;
 
   size_t line_count = 1;
   if (data_file.is_open()) {
     std::string line;
     while (getline(data_file, line)) {
       if (line_count % (data_converter.GetImageSize() + 1) == 1) {
-        image_class = stoi(line);
+        image_class = data_converter.ConvertToClass(line);
       } else {
-        std::vector<WrittenNumber::PixelColor> row_vector;
-        for (char character : line) {
-          if (character == data_converter.kWhitePixel) {
-            row_vector.push_back(WrittenNumber::PixelColor::kWhite);
-          } else if (character == data_converter.kGreyPixel) {
-            row_vector.push_back(WrittenNumber::PixelColor::kGrey);
-          } else if (character == data_converter.kBlackPixel) {
-            row_vector.push_back(WrittenNumber::PixelColor::kBlack);
-          }
-        }
-        image_vector.push_back(row_vector);
+        image_vector.push_back(data_converter.ConvertToPixels(line));
       }
 
       if (line_count % (data_converter.GetImageSize() + 1) == 0) {
         WrittenNumber written_number(image_class, image_vector);
         data_converter.dataset_.push_back(written_number);
         image_vector.clear();
-        image_str.clear();
       }
       line_count++;
-      image_str += line;
       line.clear();
     }
   }
   data_file.close();
   return in;
+}
+
+int DataConverter::ConvertToClass(const std::string &line) {
+  bool is_digit = true;
+  for (char character : line) {
+    is_digit = is_digit && std::isdigit(character);
+  }
+
+  if (is_digit) {
+    return stoi(line);
+  } else {
+    return -1;
+  }
+}
+
+std::vector<WrittenNumber::PixelColor> DataConverter::ConvertToPixels(
+    const std::string& line) {
+  std::vector<WrittenNumber::PixelColor> row_vector;
+  for (char character : line) {
+    if (character == kWhitePixel) {
+      row_vector.push_back(WrittenNumber::PixelColor::kWhite);
+    } else if (character == kGreyPixel) {
+      row_vector.push_back(WrittenNumber::PixelColor::kGrey);
+    } else if (character == kBlackPixel) {
+      row_vector.push_back(WrittenNumber::PixelColor::kBlack);
+    }
+  }
+  return row_vector;
 }
 
 } // namespace naivebayes

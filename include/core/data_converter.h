@@ -28,6 +28,10 @@ class DataConverter {
   const char kGreyPixel = '+';
   const char kBlackPixel = '#';
 
+  int ConvertToClass(const std::string& line);
+  std::vector<WrittenNumber::PixelColor> ConvertToPixels(
+      const std::string& line);
+
   size_t image_size_;
   std::string file_path_;
   std::vector<WrittenNumber> dataset_;
