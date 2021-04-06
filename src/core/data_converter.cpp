@@ -23,16 +23,18 @@ const std::vector<WrittenNumber>& DataConverter::GetDataset() const {
 }
 
 std::istream& operator>>(std::istream& data_file, DataConverter& data_converter) {
-  int image_class;
+  size_t image_class;
   std::vector<std::vector<WrittenNumber::PixelColor>> image_vector;
 
   std::string line;
   size_t line_count = 1;
   while (getline(data_file, line)) {
     if (data_converter.ConvertToClass(line) >= 0) {
+      // Then this line represents the class of the next image.
       image_class = data_converter.ConvertToClass(line);
       data_converter.image_classes_.insert(image_class);
     } else {
+      // This way of getting image size only works when the image is a square.
       if (data_converter.GetImageSize() == 0) {
         data_converter.image_size_ = line.size();
       }
@@ -61,6 +63,7 @@ int DataConverter::ConvertToClass(const std::string &line) {
   }
 
   if (is_digit) {
+    // Convert the line, which is a string, to int.
     return stoi(line);
   } else {
     return -1;
@@ -71,12 +74,14 @@ std::vector<WrittenNumber::PixelColor> DataConverter::ConvertToPixels(
     const std::string& line) {
   std::vector<WrittenNumber::PixelColor> row_vector;
   for (char character : line) {
-    if (character == kWhitePixel) {
-      row_vector.push_back(WrittenNumber::PixelColor::kWhite);
-    } else if (character == kGreyPixel) {
+    if (character == kGreyPixel) {
       row_vector.push_back(WrittenNumber::PixelColor::kGrey);
     } else if (character == kBlackPixel) {
       row_vector.push_back(WrittenNumber::PixelColor::kBlack);
+    } else {
+      // If there exists some other characters other than whitespaces,
+      // they will be converted to whitespaces in this case.
+      row_vector.push_back(WrittenNumber::PixelColor::kWhite);
     }
   }
   return row_vector;
