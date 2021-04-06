@@ -2,6 +2,8 @@
 
 namespace naivebayes {
 
+DataProcessor::DataProcessor() {}
+
 DataProcessor::DataProcessor(const DataConverter& data_converter,
                              double laplace_parameter) {
   laplace_parameter_ = laplace_parameter;
@@ -98,9 +100,10 @@ std::ostream &operator<<(std::ostream& output_file,
   size_t column_total = data_processor.pixel_probabilities_[0].size();
   size_t color_total = data_processor.pixel_probabilities_[0][0].size();
   size_t class_total = data_processor.pixel_probabilities_[0][0][0].size();
+  
   // Outputs conditional probabilities.
   for (size_t class_count = 0; class_count < class_total; class_count++) {
-    output_file << class_count << ": " << std::endl;
+    output_file << class_count << std::endl;
     for (size_t row = 0; row < row_total; row++) {
       for (size_t column = 0; column < column_total; column++) {
         for (size_t color_count = 0; color_count < color_total; color_count++) {
@@ -108,12 +111,62 @@ std::ostream &operator<<(std::ostream& output_file,
               data_processor.pixel_probabilities_[row][column][color_count]
                                                  [class_count] << "\t";
         }
-        output_file << std::endl;
       }
+      output_file << std::endl;
     }
     output_file << std::endl;
   }
   return output_file;
+}
+
+std::istream &operator>>(std::istream& input_file, 
+                         DataProcessor& data_processor) {
+  std::string line;
+  
+  // Reads prior probabilities
+  while (getline(input_file, line)) {
+    std::vector<std::string> sub_strings = 
+        data_processor.SplitDataStrings(line);
+    if (sub_strings.empty()) {
+      break;
+    } else {
+      data_processor.class_probabilities_[stoi(sub_strings.at(0))] = 
+          stod(sub_strings.at(1));
+    }
+  }
+  
+  // Reads conditional probabilities
+  while (getline(input_file, line)) {
+    std::vector<std::string> sub_strings =
+        data_processor.SplitDataStrings(line);
+    if (sub_strings.size() == 1) {
+      size_t number_class = stoi(sub_strings.at(0));
+      for (size_t i = 0; i < 28; i++) {
+        getline(input_file, line);
+        std::vector<std::string> col_data =
+            data_processor.SplitDataStrings(line);
+        for (size_t j = 0; j < 28; j++) {
+          for (size_t color_count = 0; color_count < 3; color_count++) {
+            data_processor.pixel_probabilities_[i][j][color_count]
+                                               [number_class] = 
+                stod(col_data.at(j * 3 + color_count));
+          }
+        }
+      }
+    }
+  }
+  return input_file;
+}
+
+std::vector<std::string> DataProcessor::SplitDataStrings(
+    const std::string& line) {
+  std::stringstream ss(line);
+  std::string element;
+  std::vector<std::string> sub_strings;
+  while (getline(ss, element, ' ')) {
+    sub_strings.push_back(element);
+  }
+  return sub_strings;
 }
 
 } // namespace naivebayes

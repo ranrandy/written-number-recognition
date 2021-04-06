@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <sstream>
 
 #include "core/data_converter.h"
 #include "written_number.h"
@@ -15,6 +16,11 @@ using std::vector;
  */
 class DataProcessor {
 public:
+  /**
+   * Default constructor used before loading model from a file.
+   */
+  DataProcessor();
+  
   /**
    * Constructor for processing the dataset to get the probabilities info.
    * @param data_converter a data converter containing preprocessed dataset
@@ -35,9 +41,26 @@ public:
    */
   const vector<vector<vector<vector<double>>>>& GetPixelProbability() const;
   
+  /**
+   * Writes the prior probabilities P(class = c) and 
+   * conditional probabilities P(F_{i, j} = f | class = c) to a file,
+   * namely trained model.
+   * @param output_file the file to write to
+   * @param data_processor the data processor itself
+   * @return output file after writing
+   */
   friend std::ostream &operator<<(std::ostream& output_file,
                                   DataProcessor& data_processor);
 
+  /**
+   * 
+   * @param input_file 
+   * @param data_processor 
+   * @return 
+   */
+  friend std::istream &operator>>(std::istream& input_file,
+                                  DataProcessor& data_processor);
+  
 private:
   /**
    * Counts the number of each written number class in the dataset.
@@ -63,6 +86,13 @@ private:
    * @param data_converter a data converter containing preprocessed dataset
    */
   void CalculateProbabilityForPixels(const DataConverter& data_converter);
+  
+  /**
+   * Splits a line of string data to several substring data.
+   * @param line a line in the trained model file
+   * @return a list of substrings consisting of data a in line
+   */
+  std::vector<std::string> SplitDataStrings(const std::string& line);
 
   // Parameter k for laplace smoothing
   double laplace_parameter_;
