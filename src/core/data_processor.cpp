@@ -126,7 +126,7 @@ std::istream &operator>>(std::istream& input_file,
   // Reads prior probabilities
   while (getline(input_file, line)) {
     std::vector<std::string> sub_strings = 
-        data_processor.SplitDataStrings(line);
+        data_processor.SplitDataStrings(line, ' ');
     if (sub_strings.empty()) {
       break;
     } else {
@@ -135,16 +135,20 @@ std::istream &operator>>(std::istream& input_file,
     }
   }
   
+  // data_processor.InitiatePixelProbabilities();
+  data_processor.pixel_probabilities_ = vector<vector<vector<vector<double>>>>(
+      28, vector<vector<vector<double>>>(28, vector<vector<double>>(
+                                                 3, vector<double>(10, 0))));
   // Reads conditional probabilities
   while (getline(input_file, line)) {
     std::vector<std::string> sub_strings =
-        data_processor.SplitDataStrings(line);
+        data_processor.SplitDataStrings(line, ' ');
     if (sub_strings.size() == 1) {
       size_t number_class = stoi(sub_strings.at(0));
       for (size_t i = 0; i < 28; i++) {
         getline(input_file, line);
         std::vector<std::string> col_data =
-            data_processor.SplitDataStrings(line);
+            data_processor.SplitDataStrings(line, '\t');
         for (size_t j = 0; j < 28; j++) {
           for (size_t color_count = 0; color_count < 3; color_count++) {
             data_processor.pixel_probabilities_[i][j][color_count]
@@ -159,11 +163,11 @@ std::istream &operator>>(std::istream& input_file,
 }
 
 std::vector<std::string> DataProcessor::SplitDataStrings(
-    const std::string& line) {
+    const std::string& line, char splitter) {
   std::stringstream ss(line);
   std::string element;
   std::vector<std::string> sub_strings;
-  while (getline(ss, element, ' ')) {
+  while (getline(ss, element, splitter)) {
     sub_strings.push_back(element);
   }
   return sub_strings;

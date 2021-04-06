@@ -84,3 +84,20 @@ TEST_CASE("Processing for arbitrary image sizes") {
     REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.375).epsilon(0.01));
   }
 }
+
+TEST_CASE("Loading from trained model") {
+  DataProcessor data_processor;
+  std::ifstream input_file("/Users/lirunfeng/cinder_master/my-projects/"
+                           "naive-bayes-ranrandy/data/computed_probabilities"
+                           ".txt");
+  input_file >> data_processor;
+
+  map<int, double> image_class_probabilities;
+  vector<vector<vector<vector<double>>>> pixel_probabilities;
+  image_class_probabilities = data_processor.GetClassProbability();
+  pixel_probabilities = data_processor.GetPixelProbability();
+ 
+  REQUIRE(image_class_probabilities[4] == Approx(0.1058).epsilon(0.001));
+  REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.2419).epsilon(0.001));
+}
+

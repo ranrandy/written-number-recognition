@@ -92,7 +92,8 @@ private:
    * @param line a line in the trained model file
    * @return a list of substrings consisting of data a in line
    */
-  std::vector<std::string> SplitDataStrings(const std::string& line);
+  std::vector<std::string> SplitDataStrings(const std::string& line, 
+                                            char splitter);
 
   // Parameter k for laplace smoothing
   double laplace_parameter_;
