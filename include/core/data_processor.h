@@ -31,11 +31,16 @@ public:
   const vector<vector<vector<vector<double>>>>& GetPixelProbability() const;
 
 private:
+  void CountClasses(const DataConverter& data_converter);
   void CalculateProbabilityForClasses(const DataConverter& data_converter);
+  void InitiatePixelProbabilities(const DataConverter& data_converter);
   void CalculateProbabilityForPixels(const DataConverter& data_converter);
 
   // Parameter k used for laplace smoothing
   double laplace_parameter_;
+
+  // The number of each class in the dataset
+  std::map<int, size_t> class_count_;
 
   // P(class = c)
   std::map<int, double> class_probabilities_;
