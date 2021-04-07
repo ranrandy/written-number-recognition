@@ -53,10 +53,12 @@ public:
                                   DataProcessor& data_processor);
 
   /**
-   * 
-   * @param input_file 
-   * @param data_processor 
-   * @return 
+   * Reads the prior probabilities P(class = c) and 
+   * conditional probabilities P(F_{i, j} = f | class = c) from a file,
+   * namely the trained model.
+   * @param input_file the file to read
+   * @param data_processor the data processor itself
+   * @return input file after reading
    */
   friend std::istream &operator>>(std::istream& input_file,
                                   DataProcessor& data_processor);
@@ -75,11 +77,14 @@ private:
   void CalculateProbabilityForClasses(const DataConverter& data_converter);
   
   /**
-   * Initiates each P(F_{i, j} = f | class = c) with 
-   * k / (pixel_color_count * k + # classes belonging to class c).
-   * @param data_converter a data converter containing preprocessed dataset
-   */
-  void InitiatePixelProbabilities(const DataConverter& data_converter);
+    * Initiates each P(F_{i, j} = f | class = c) with 0.
+    * @param image_size the size of one image in the dataset 
+    * @param color_count the number of color that will be in one image
+    * @param max_number the greatest written number in the dataset
+    */ 
+  void InitiatePixelProbabilities(size_t image_size, 
+                                  size_t color_count, 
+                                  size_t max_number);
   
   /**
    * Calculates P(F_{i, j} = f | class = c) for each point and class.

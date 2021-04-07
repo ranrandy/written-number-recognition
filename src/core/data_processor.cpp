@@ -9,7 +9,9 @@ DataProcessor::DataProcessor(const DataConverter& data_converter,
   laplace_parameter_ = laplace_parameter;
   CountClasses(data_converter);
   CalculateProbabilityForClasses(data_converter);
-  InitiatePixelProbabilities(data_converter);
+  InitiatePixelProbabilities(data_converter.GetImageSize(), 
+                             data_converter.kPixelColorCount, 
+                             data_converter.GetGreatestWrittenNumber());
   CalculateProbabilityForPixels(data_converter);
 }
 
@@ -40,19 +42,20 @@ void DataProcessor::CalculateProbabilityForClasses(
   }
 }
 
-void DataProcessor::InitiatePixelProbabilities(
-    const DataConverter& data_converter) {
+void DataProcessor::InitiatePixelProbabilities(size_t image_size, 
+                                               size_t color_count, 
+                                               size_t max_number) {
   // Initializes a 4D vector whose size info for each layer is 
   // (image_size * image_size * pixel_color_count * greatest_written_number)
   pixel_probabilities_ = vector<vector<vector<vector<double>>>>(
-      data_converter.GetImageSize(),
-      vector<vector<vector<double>>>(
-          data_converter.GetImageSize(),
-          vector<vector<double>>(
-              data_converter.kPixelColorCount,
-              vector<double>(
-                  data_converter.GetGreatestWrittenNumber() + 1, 0))));
+      image_size, vector<vector<vector<double>>>(
+          image_size, vector<vector<double>>(
+              color_count, vector<double>(
+                  max_number + 1, 0))));
+}
 
+void DataProcessor::CalculateProbabilityForPixels(
+    const DataConverter& data_converter) {
   // Assigns each P(F_{i, j} = f | class = c) with
   // k / (pixel_color_count * k + # classes belonging to class c).
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
@@ -68,10 +71,7 @@ void DataProcessor::InitiatePixelProbabilities(
       }
     }
   }
-}
-
-void DataProcessor::CalculateProbabilityForPixels(
-    const DataConverter& data_converter) {
+  
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     for (size_t i = 0; i < written_number.GetImageVector().size(); i++) {
       for (size_t j = 0; j < written_number.GetImageVector()[i].size(); j++) {
@@ -88,24 +88,28 @@ void DataProcessor::CalculateProbabilityForPixels(
 
 std::ostream &operator<<(std::ostream& output_file, 
                          DataProcessor& data_processor) {
+  size_t image_size = data_processor.pixel_probabilities_.size();
+  size_t color_total = data_processor.pixel_probabilities_[0][0].size();
+  size_t max_number = data_processor.pixel_probabilities_[0][0][0].size();
+  
+  // Outputs image size, number of colors, number of written number classes
+  // and the largest written number.
+  output_file << image_size << " " << color_total << " " << max_number << 
+      " " << std::endl;
+  
   // Outputs prior probabilities first.
   for (auto & it : data_processor.class_probabilities_) {
     output_file << it.first << " " << it.second << std::endl; 
   }
   
-  // Inserts a line between prior probabilities and conditional probabilities.
+  // Outputs a blank line between prior and conditional probabilities.
   output_file << std::endl;
   
-  size_t row_total = data_processor.pixel_probabilities_.size();
-  size_t column_total = data_processor.pixel_probabilities_[0].size();
-  size_t color_total = data_processor.pixel_probabilities_[0][0].size();
-  size_t class_total = data_processor.pixel_probabilities_[0][0][0].size();
-  
   // Outputs conditional probabilities.
-  for (size_t class_count = 0; class_count < class_total; class_count++) {
+  for (size_t class_count = 0; class_count < max_number; class_count++) {
     output_file << class_count << std::endl;
-    for (size_t row = 0; row < row_total; row++) {
-      for (size_t column = 0; column < column_total; column++) {
+    for (size_t row = 0; row < image_size; row++) {
+      for (size_t column = 0; column < image_size; column++) {
         for (size_t color_count = 0; color_count < color_total; color_count++) {
           output_file << std::fixed << std::setprecision(6) << 
               data_processor.pixel_probabilities_[row][column][color_count]
@@ -114,7 +118,6 @@ std::ostream &operator<<(std::ostream& output_file,
       }
       output_file << std::endl;
     }
-    output_file << std::endl;
   }
   return output_file;
 }
@@ -123,37 +126,48 @@ std::istream &operator>>(std::istream& input_file,
                          DataProcessor& data_processor) {
   std::string line;
   
+  // Reads the image size, number of colors and number of written 
+  // number classes from the first line of the file.
+  getline(input_file, line);
+  std::vector<std::string> data_parameters = 
+      data_processor.SplitDataStrings(line, ' ');
+  size_t image_size = stoi(data_parameters.at(0));
+  size_t color_total = stoi(data_parameters.at(1));
+  size_t max_number = stoi(data_parameters.at(2));
+  
   // Reads prior probabilities
   while (getline(input_file, line)) {
-    std::vector<std::string> sub_strings = 
+    std::vector<std::string> class_pair = 
         data_processor.SplitDataStrings(line, ' ');
-    if (sub_strings.empty()) {
+    if (class_pair.empty()) {
       break;
     } else {
-      data_processor.class_probabilities_[stoi(sub_strings.at(0))] = 
-          stod(sub_strings.at(1));
+      data_processor.class_probabilities_[stoi(class_pair.at(0))] = 
+          stod(class_pair.at(1));
     }
   }
   
-  // data_processor.InitiatePixelProbabilities();
-  data_processor.pixel_probabilities_ = vector<vector<vector<vector<double>>>>(
-      28, vector<vector<vector<double>>>(28, vector<vector<double>>(
-                                                 3, vector<double>(10, 0))));
   // Reads conditional probabilities
+  data_processor.InitiatePixelProbabilities(image_size, color_total, 
+                                            max_number);
   while (getline(input_file, line)) {
     std::vector<std::string> sub_strings =
         data_processor.SplitDataStrings(line, ' ');
     if (sub_strings.size() == 1) {
+      // Reads probabilities for a certain number class
       size_t number_class = stoi(sub_strings.at(0));
-      for (size_t i = 0; i < 28; i++) {
+      for (size_t i = 0; i < image_size; i++) {
         getline(input_file, line);
         std::vector<std::string> col_data =
             data_processor.SplitDataStrings(line, '\t');
-        for (size_t j = 0; j < 28; j++) {
-          for (size_t color_count = 0; color_count < 3; color_count++) {
+        
+        // Reads probabilities from one row for a certain number class
+        for (size_t j = 0; j < image_size; j++) {
+          for (size_t color_count = 0; color_count < color_total; 
+               color_count++) {
             data_processor.pixel_probabilities_[i][j][color_count]
                                                [number_class] = 
-                stod(col_data.at(j * 3 + color_count));
+                stod(col_data.at(j * color_total + color_count));
           }
         }
       }
