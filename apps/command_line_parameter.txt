@@ -1,0 +1,3 @@
+k "/Users/lirunfeng/cinder_master/my-projects/naive-bayes-ranrandy/data/testimagesandlabels.txt" "/Users/lirunfeng/cinder_master/my-projects/naive-bayes-ranrandy/data/computed_probabilities.txt"
+"/Users/lirunfeng/cinder_master/my-projects/naive-bayes-ranrandy/data/computed_probabilities.txt" "/Users/lirunfeng/cinder_master/my-projects/naive-bayes-ranrandy/data/testimagesandlabels.txt"
+
