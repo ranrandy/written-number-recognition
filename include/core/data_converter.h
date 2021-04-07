@@ -32,7 +32,7 @@ class DataConverter {
    * Gets the largest number of written number in the dataset.
    * @return the largest value of written numbers
    */
-  size_t GetGreatestWrittenNumber() const;
+  size_t GetMaxWrittenNumber() const;
   
   /**
    * Gets the image size of each written number in the dataset.
@@ -48,11 +48,11 @@ class DataConverter {
 
   /**
    * Reads a dataset file.
-   * @param in input file stream
+   * @param data_file input file stream
    * @param data_converter the data_converter object itself
    * @return file stream after reading the file
    */
-  friend std::istream &operator>>(std::istream& in,
+  friend std::istream &operator>>(std::istream& data_file,
                                   DataConverter& data_converter);
 
  private:

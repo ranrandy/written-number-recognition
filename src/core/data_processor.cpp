@@ -11,7 +11,7 @@ DataProcessor::DataProcessor(const DataConverter& data_converter,
   CalculateProbabilityForClasses(data_converter);
   InitiatePixelProbabilities(data_converter.GetImageSize(), 
                              data_converter.kPixelColorCount, 
-                             data_converter.GetGreatestWrittenNumber());
+                             data_converter.GetMaxWrittenNumber());
   CalculateProbabilityForPixels(data_converter);
 }
 

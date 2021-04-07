@@ -10,7 +10,7 @@ size_t DataConverter::GetImageClassCount() const {
   return image_classes_.size();
 }
 
-size_t DataConverter::GetGreatestWrittenNumber() const {
+size_t DataConverter::GetMaxWrittenNumber() const {
   return *max_element(image_classes_.begin(), image_classes_.end());
 }
 

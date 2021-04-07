@@ -5,8 +5,6 @@
 
 using naivebayes::DataConverter;
 using naivebayes::WrittenNumber;
-using std::cout;
-using std::endl;
 
 TEST_CASE("Overload >> operator to read the data") {
   DataConverter data_converter;
