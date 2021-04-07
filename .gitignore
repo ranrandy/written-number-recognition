@@ -1,3 +1,4 @@
 /data/trainingimagesandlabels.txt
 /data/test_normal_images.txt
 /data/test_smaller_images.txt
+/data/testimagesandlabels.txt
