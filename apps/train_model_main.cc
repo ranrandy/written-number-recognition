@@ -1,10 +1,13 @@
 #include "core/data_converter.h"
 #include "core/data_processor.h"
 #include "core/written_number.h"
+#include "tclap/CmdLine.h"
 
 using namespace naivebayes;
 
 int main(int argc, char* argv[]) {
+  
+  
   // argv[1] = load_model_path
   // argv[2] = test_file_path
   if (argc == 3) {
