@@ -16,10 +16,10 @@ int main(int argc, char* argv[]) {
     
     if (input_file.is_open() && test_input_file.is_open()) {
       NaiveBayesModel naive_bayes_model;
-      input_file >> naive_bayes_model;
+      naive_bayes_model << input_file;
       
       DataConverter data_converter;
-      test_input_file >> data_converter;
+      data_converter << test_input_file;
       
       std::vector<size_t> classification_result;
       std::vector<size_t> testing_results;
@@ -79,11 +79,11 @@ int main(int argc, char* argv[]) {
 
     if (input_file.is_open()) {
       DataConverter data_converter;
-      input_file >> data_converter;
+      data_converter << input_file;
 
       NaiveBayesModel naive_bayes_model(data_converter, std::stod(argv[1]));
       std::ofstream output_file(argv[3]);
-      output_file << naive_bayes_model;
+      naive_bayes_model >> output_file;
 
       output_file.close();
       input_file.close();

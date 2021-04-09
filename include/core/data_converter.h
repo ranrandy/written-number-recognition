@@ -49,11 +49,9 @@ class DataConverter {
   /**
    * Reads a dataset file.
    * @param data_file input file stream
-   * @param data_converter the data_converter object itself
    * @return file stream after reading the file
    */
-  friend std::istream &operator>>(std::istream& data_file,
-                                  DataConverter& data_converter);
+  std::istream &operator<<(std::istream& data_file);
 
  private:
   const char kGreyPixel = '+';

@@ -22,29 +22,28 @@ const std::vector<WrittenNumber>& DataConverter::GetDataset() const {
   return dataset_;
 }
 
-std::istream& operator>>(std::istream& data_file, DataConverter& data_converter) {
+std::istream& DataConverter::operator<<(std::istream& data_file) {
   size_t image_class;
   std::vector<std::vector<WrittenNumber::PixelColor>> image_vector;
 
   std::string line;
   size_t line_count = 1;
   while (getline(data_file, line)) {
-    if (data_converter.ConvertToClass(line) >= 0) {
+    if (ConvertToClass(line) >= 0) {
       // Then this line represents the class of the next image.
-      image_class = data_converter.ConvertToClass(line);
-      data_converter.image_classes_.insert(image_class);
+      image_class = ConvertToClass(line);
+      image_classes_.insert(image_class);
     } else {
       // This way of getting image size only works when the image is a square.
-      if (data_converter.GetImageSize() == 0) {
-        data_converter.image_size_ = line.size();
+      if (GetImageSize() == 0) {
+        image_size_ = line.size();
       }
-      image_vector.push_back(data_converter.ConvertToPixels(line));
+      image_vector.push_back(ConvertToPixels(line));
     }
 
-    if (line_count % (data_converter.GetImageSize() + 1) == 0 &&
-        data_converter.GetImageSize() != 0) {
+    if (line_count % (GetImageSize() + 1) == 0 && GetImageSize() != 0) {
       WrittenNumber written_number(image_class, image_vector);
-      data_converter.dataset_.push_back(written_number);
+      dataset_.push_back(written_number);
       image_vector.clear();
     }
     line_count++;

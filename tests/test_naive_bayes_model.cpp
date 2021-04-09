@@ -17,7 +17,7 @@ TEST_CASE("Calculate P(class = c)") {
   string data_file_path = "data/test_normal_images.txt";
   std::ifstream input_file(data_file_path);
   DataConverter data_converter;
-  input_file >> data_converter;
+  data_converter << input_file;
   map<int, double> image_class_probabilities;
 
   SECTION("Default Processor") {
@@ -39,7 +39,7 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c)") {
   string data_file_path = "data/test_normal_images.txt";
   std::ifstream input_file(data_file_path);
   DataConverter data_converter;
-  input_file >> data_converter;
+  data_converter << input_file;
   vector<vector<vector<vector<double>>>> pixel_probabilities;
 
   SECTION("Default Processor") {
@@ -59,7 +59,7 @@ TEST_CASE("Processing for arbitrary image sizes") {
   string data_file_path = "data/test_smaller_images.txt";
   std::ifstream input_file(data_file_path);
   DataConverter data_converter;
-  input_file >> data_converter;
+  data_converter << input_file;
   map<int, double> image_class_probabilities;
   vector<vector<vector<vector<double>>>> pixel_probabilities;
 
@@ -87,9 +87,9 @@ TEST_CASE("Writing trained model") {
   std::ofstream output_file(output_file_path);
   
   DataConverter data_converter;
-  input_file >> data_converter;
+  data_converter << input_file;
   NaiveBayesModel naive_bayes_model(data_converter, 10);
-  output_file << naive_bayes_model;
+  naive_bayes_model >> output_file;
 
   std::ifstream trained_model_file(output_file_path);
   string line;
@@ -107,7 +107,7 @@ TEST_CASE("Writing trained model") {
 TEST_CASE("Loading from trained model") {
   NaiveBayesModel naive_bayes_model;
   std::ifstream input_file("data/computed_probabilities.txt");
-  input_file >> naive_bayes_model;
+  naive_bayes_model << input_file;
 
   map<int, double> image_class_probabilities;
   vector<vector<vector<vector<double>>>> pixel_probabilities;

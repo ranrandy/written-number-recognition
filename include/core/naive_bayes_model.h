@@ -14,7 +14,7 @@ using std::vector;
  * Process the data to get probabilities for P(class = c) and
  * P(F_{i, j} = f | class = c).
  */
-class NaiveBayesModel { // Change the name to like "naive_model..."
+class NaiveBayesModel {
 public:
   typedef vector<vector<vector<vector<double>>>> vec4;
   typedef vector<vector<vector<double>>> vec3;
@@ -50,22 +50,18 @@ public:
    * conditional probabilities P(F_{i, j} = f | class = c) to a file,
    * namely trained model.
    * @param output_file the file to write to
-   * @param naive_bayes_model the data processor itself
    * @return output file after writing
    */
-  friend std::ostream &operator<<(std::ostream& output_file,
-                                  NaiveBayesModel& naive_bayes_model);
+  std::ostream& operator>>(std::ostream& output_file);
 
   /**
    * Reads the prior probabilities P(class = c) and 
    * conditional probabilities P(F_{i, j} = f | class = c) from a file,
    * namely the trained model.
    * @param input_file the file to read
-   * @param naive_bayes_model the data processor itself
    * @return input file after reading
    */
-  friend std::istream &operator>>(std::istream& input_file,
-                                  NaiveBayesModel& naive_bayes_model);
+  std::istream& operator<<(std::istream& input_file);
   // no friend, instead, 
   // use std::istream &operator<<(std::istream& input_file)
   // and naive_bayes_model << input_file

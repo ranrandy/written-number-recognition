@@ -85,11 +85,10 @@ void NaiveBayesModel::CalculateProbabilityForPixels(
   }
 }
 
-std::ostream &operator<<(std::ostream& output_file, 
-                         NaiveBayesModel& naive_bayes_model) {
-  size_t image_size = naive_bayes_model.pixel_probabilities_.size();
-  size_t color_total = naive_bayes_model.pixel_probabilities_[0][0].size();
-  size_t max_number = naive_bayes_model.pixel_probabilities_[0][0][0].size();
+std::ostream& NaiveBayesModel::operator>>(std::ostream& output_file) {
+  size_t image_size = pixel_probabilities_.size();
+  size_t color_total = pixel_probabilities_[0][0].size();
+  size_t max_number = pixel_probabilities_[0][0][0].size();
   
   // Outputs image size, number of colors, number of written number classes
   // and the largest written number.
@@ -97,7 +96,7 @@ std::ostream &operator<<(std::ostream& output_file,
       " " << std::endl;
   
   // Outputs prior probabilities first.
-  for (auto & it : naive_bayes_model.class_probabilities_) {
+  for (auto & it : class_probabilities_) {
     output_file << it.first << " " << it.second << std::endl; 
   }
   
@@ -111,8 +110,8 @@ std::ostream &operator<<(std::ostream& output_file,
       for (size_t column = 0; column < image_size; column++) {
         for (size_t color_count = 0; color_count < color_total; color_count++) {
           output_file << std::fixed << std::setprecision(6) << 
-              naive_bayes_model.pixel_probabilities_[row][column][color_count]
-                                                 [class_count] << "\t";
+              pixel_probabilities_[row][column][color_count]
+                                  [class_count] << "\t";
         }
       }
       output_file << std::endl;
@@ -121,51 +120,44 @@ std::ostream &operator<<(std::ostream& output_file,
   return output_file;
 }
 
-std::istream &operator>>(std::istream& input_file, 
-                         NaiveBayesModel& naive_bayes_model) {
+std::istream& NaiveBayesModel::operator<<(std::istream& input_file) {
   std::string line;
   
   // Reads the image size, number of colors and number of written 
   // number classes from the first line of the file.
   getline(input_file, line);
-  std::vector<std::string> data_parameters = 
-      naive_bayes_model.SplitDataStrings(line, ' ');
+  vector<std::string> data_parameters = SplitDataStrings(line, ' ');
   size_t image_size = stoi(data_parameters.at(0));
   size_t color_total = stoi(data_parameters.at(1));
   size_t max_number = stoi(data_parameters.at(2));
   
   // Reads prior probabilities
   while (getline(input_file, line)) {
-    std::vector<std::string> class_pair = 
-        naive_bayes_model.SplitDataStrings(line, ' ');
+    vector<std::string> class_pair = SplitDataStrings(line, ' ');
     if (class_pair.empty()) {
       break;
     } else {
-      naive_bayes_model.class_probabilities_[stoi(class_pair.at(0))] = 
-          stod(class_pair.at(1));
+      class_probabilities_[stoi(class_pair.at(0))] = stod(class_pair.at(1));
     }
   }
   
   // Reads conditional probabilities
-  naive_bayes_model.InitiatePixelProbabilities(image_size, color_total, 
+  InitiatePixelProbabilities(image_size, color_total, 
                                             max_number);
   while (getline(input_file, line)) {
-    std::vector<std::string> sub_strings =
-        naive_bayes_model.SplitDataStrings(line, ' ');
+    vector<std::string> sub_strings = SplitDataStrings(line, ' ');
     if (sub_strings.size() == 1) {
       // Reads probabilities for a certain number class
       size_t number_class = stoi(sub_strings.at(0));
       for (size_t i = 0; i < image_size; i++) {
         getline(input_file, line);
-        std::vector<std::string> col_data =
-            naive_bayes_model.SplitDataStrings(line, '\t');
+        vector<std::string> col_data = SplitDataStrings(line, '\t');
         
         // Reads probabilities from one row for a certain number class
         for (size_t j = 0; j < image_size; j++) {
           for (size_t color_count = 0; color_count < color_total; 
                color_count++) {
-            naive_bayes_model.pixel_probabilities_[i][j][color_count]
-                                               [number_class] = 
+            pixel_probabilities_[i][j][color_count][number_class] = 
                 stod(col_data.at(j * color_total + color_count));
           }
         }
