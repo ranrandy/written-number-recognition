@@ -14,9 +14,7 @@ using std::string;
 vector<string> SplitDataStrings(const string& line, char splitter); 
 
 TEST_CASE("Calculate P(class = c)") {
-  string data_file_path = "/Users/lirunfeng/cinder_master/my-projects/"
-                          "naive-bayes-ranrandy/data/test_normal_images"
-                          ".txt";
+  string data_file_path = "data/test_normal_images.txt";
   std::ifstream input_file(data_file_path);
   DataConverter data_converter;
   input_file >> data_converter;
@@ -38,9 +36,7 @@ TEST_CASE("Calculate P(class = c)") {
 }
 
 TEST_CASE("Calculate P(F_{i, j} = f | class = c)") {
-  string data_file_path = "/Users/lirunfeng/cinder_master/my-projects/"
-                          "naive-bayes-ranrandy/data/test_normal_images"
-                          ".txt";
+  string data_file_path = "data/test_normal_images.txt";
   std::ifstream input_file(data_file_path);
   DataConverter data_converter;
   input_file >> data_converter;
@@ -60,9 +56,7 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c)") {
 }
 
 TEST_CASE("Processing for arbitrary image sizes") {
-  string data_file_path = "/Users/lirunfeng/cinder_master/my-projects/"
-                          "naive-bayes-ranrandy/data/test_smaller_images"
-                          ".txt";
+  string data_file_path = "data/test_smaller_images.txt";
   std::ifstream input_file(data_file_path);
   DataConverter data_converter;
   input_file >> data_converter;
@@ -87,12 +81,8 @@ TEST_CASE("Processing for arbitrary image sizes") {
 }
 
 TEST_CASE("Writing trained model") {
-  string data_file_path = "/Users/lirunfeng/cinder_master/my-projects/"
-                          "naive-bayes-ranrandy/data/test_normal_images"
-                          ".txt";
-  string output_file_path = "/Users/lirunfeng/cinder_master/my-projects/"
-                            "naive-bayes-ranrandy/data/test_trained_model"
-                            ".txt";
+  string data_file_path = "data/test_normal_images.txt";
+  string output_file_path = "data/test_trained_model.txt";
   std::ifstream input_file(data_file_path);
   std::ofstream output_file(output_file_path);
   
@@ -116,9 +106,7 @@ TEST_CASE("Writing trained model") {
 
 TEST_CASE("Loading from trained model") {
   DataProcessor data_processor;
-  std::ifstream input_file("/Users/lirunfeng/cinder_master/my-projects/"
-                           "naive-bayes-ranrandy/data/computed_probabilities"
-                           ".txt");
+  std::ifstream input_file("data/computed_probabilities.txt");
   input_file >> data_processor;
 
   map<int, double> image_class_probabilities;
@@ -126,8 +114,8 @@ TEST_CASE("Loading from trained model") {
   image_class_probabilities = data_processor.GetClassProbability();
   pixel_probabilities = data_processor.GetPixelProbability();
  
-  REQUIRE(image_class_probabilities[4] == Approx(0.1058).epsilon(0.001));
-  REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.2419).epsilon(0.001));
+  REQUIRE(image_class_probabilities[4] == Approx(0.1069).epsilon(0.001));
+  REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.2182).epsilon(0.001));
 }
 
 vector<string> SplitDataStrings(const string& line, char splitter) {

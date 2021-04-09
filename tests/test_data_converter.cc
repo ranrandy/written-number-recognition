@@ -9,9 +9,7 @@ using naivebayes::WrittenNumber;
 TEST_CASE("Overload >> operator to read the data") {
   DataConverter data_converter;
   SECTION("Normal image size data (size = 28)") {
-    std::ifstream input_file("/Users/lirunfeng/cinder_master/my-projects/"
-                             "naive-bayes-ranrandy/data/test_normal_images"
-                             ".txt");
+    std::ifstream input_file("data/test_normal_images.txt");
     input_file >> data_converter;
     REQUIRE(data_converter.GetDataset()[2].GetImageClass() == 4);
     REQUIRE(data_converter.GetDataset()[1].GetImageVector().at(3).at(18) ==
@@ -19,9 +17,7 @@ TEST_CASE("Overload >> operator to read the data") {
   }
   
   SECTION("Arbitrary image size data (size = 20)") {
-    std::ifstream input_file("/Users/lirunfeng/cinder_master/my-projects/"
-                             "naive-bayes-ranrandy/data/test_smaller_images"
-                             ".txt");
+    std::ifstream input_file("data/test_smaller_images.txt");
     input_file >> data_converter;
     REQUIRE(data_converter.GetDataset()[1].GetImageClass() == 1);
     REQUIRE(data_converter.GetDataset()[1].GetImageVector().at(10).at(13) ==
