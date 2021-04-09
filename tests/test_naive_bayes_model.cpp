@@ -1,12 +1,12 @@
 #include <catch2/catch.hpp>
 
 #include "core/data_converter.h"
-#include "core/data_processor.h"
+#include "core/naive_bayes_model.h"
 #include "core/written_number.h"
 
 using naivebayes::DataConverter;
 using naivebayes::WrittenNumber;
-using naivebayes::DataProcessor;
+using naivebayes::NaiveBayesModel;
 using std::map;
 using std::vector;
 using std::string;
@@ -21,15 +21,15 @@ TEST_CASE("Calculate P(class = c)") {
   map<int, double> image_class_probabilities;
 
   SECTION("Default Processor") {
-    DataProcessor data_processor(data_converter);
-    image_class_probabilities = data_processor.GetClassProbability();
+    NaiveBayesModel naive_bayes_model(data_converter);
+    image_class_probabilities = naive_bayes_model.GetPriorProbability();
     REQUIRE(image_class_probabilities[4] == Approx(0.667).epsilon(0.01));
     REQUIRE(image_class_probabilities[6] == Approx(0.333).epsilon(0.01));
   }
 
   SECTION("After laplace smoothing") {
-    DataProcessor data_processor(data_converter, 10);
-    image_class_probabilities = data_processor.GetClassProbability();
+    NaiveBayesModel naive_bayes_model(data_converter, 10);
+    image_class_probabilities = naive_bayes_model.GetPriorProbability();
     REQUIRE(image_class_probabilities[4] == Approx(0.5217).epsilon(0.01));
     REQUIRE(image_class_probabilities[6] == Approx(0.4782).epsilon(0.01));
   }
@@ -43,14 +43,14 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c)") {
   vector<vector<vector<vector<double>>>> pixel_probabilities;
 
   SECTION("Default Processor") {
-    DataProcessor data_processor(data_converter);
-    pixel_probabilities = data_processor.GetPixelProbability();
+    NaiveBayesModel naive_bayes_model(data_converter);
+    pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(pixel_probabilities[14][16][2][4] == Approx(1).epsilon(0.01));
   }
 
   SECTION("After laplace smoothing") {
-    DataProcessor data_processor(data_converter, 10);
-    pixel_probabilities = data_processor.GetPixelProbability();
+    NaiveBayesModel naive_bayes_model(data_converter, 10);
+    pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(pixel_probabilities[14][16][2][4] == Approx(0.375).epsilon(0.01));
   }
 }
@@ -64,17 +64,17 @@ TEST_CASE("Processing for arbitrary image sizes") {
   vector<vector<vector<vector<double>>>> pixel_probabilities;
 
   SECTION("Default Processor") {
-    DataProcessor data_processor(data_converter);
-    image_class_probabilities = data_processor.GetClassProbability();
-    pixel_probabilities = data_processor.GetPixelProbability();
+    NaiveBayesModel naive_bayes_model(data_converter);
+    image_class_probabilities = naive_bayes_model.GetPriorProbability();
+    pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(image_class_probabilities[4] == Approx(0.667).epsilon(0.01));
     REQUIRE(pixel_probabilities[11][11][1][4] == Approx(1).epsilon(0.01));
   }
 
   SECTION("After laplace smoothing") {
-    DataProcessor data_processor(data_converter, 10);
-    image_class_probabilities = data_processor.GetClassProbability();
-    pixel_probabilities = data_processor.GetPixelProbability();
+    NaiveBayesModel naive_bayes_model(data_converter, 10);
+    image_class_probabilities = naive_bayes_model.GetPriorProbability();
+    pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(image_class_probabilities[1] == Approx(0.4782).epsilon(0.01));
     REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.375).epsilon(0.01));
   }
@@ -88,8 +88,8 @@ TEST_CASE("Writing trained model") {
   
   DataConverter data_converter;
   input_file >> data_converter;
-  DataProcessor data_processor(data_converter, 10);
-  output_file << data_processor;
+  NaiveBayesModel naive_bayes_model(data_converter, 10);
+  output_file << naive_bayes_model;
 
   std::ifstream trained_model_file(output_file_path);
   string line;
@@ -105,14 +105,14 @@ TEST_CASE("Writing trained model") {
 }
 
 TEST_CASE("Loading from trained model") {
-  DataProcessor data_processor;
+  NaiveBayesModel naive_bayes_model;
   std::ifstream input_file("data/computed_probabilities.txt");
-  input_file >> data_processor;
+  input_file >> naive_bayes_model;
 
   map<int, double> image_class_probabilities;
   vector<vector<vector<vector<double>>>> pixel_probabilities;
-  image_class_probabilities = data_processor.GetClassProbability();
-  pixel_probabilities = data_processor.GetPixelProbability();
+  image_class_probabilities = naive_bayes_model.GetPriorProbability();
+  pixel_probabilities = naive_bayes_model.GetConditionalProbability();
  
   REQUIRE(image_class_probabilities[4] == Approx(0.1069).epsilon(0.001));
   REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.2182).epsilon(0.001));

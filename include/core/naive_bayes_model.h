@@ -14,54 +14,61 @@ using std::vector;
  * Process the data to get probabilities for P(class = c) and
  * P(F_{i, j} = f | class = c).
  */
-class DataProcessor {
+class NaiveBayesModel { // Change the name to like "naive_model..."
 public:
+  typedef vector<vector<vector<vector<double>>>> vec4;
+  typedef vector<vector<vector<double>>> vec3;
+  typedef vector<vector<double>> vec2;
+  
   /**
    * Default constructor used before loading model from a file.
    */
-  DataProcessor();
+  NaiveBayesModel();
   
   /**
    * Constructor for processing the dataset to get the probabilities info.
    * @param data_converter a data converter containing preprocessed dataset
    * @param laplace_parameter the laplace smoothing parameter for processing
    */
-  DataProcessor(const DataConverter& data_converter,
+  NaiveBayesModel(const DataConverter& data_converter,
                 double laplace_parameter = 0);
 
   /**
    * Gets a map containing P(class = c) data.
    * @return a map(class = c, P(class = c))
    */
-  const std::map<int, double>& GetClassProbability() const;
+  const std::map<int, double>& GetPriorProbability() const;
 
   /**
    * Gets a 4D vector containing P(F_{i, j} = f | class = c) data.
    * @return a vector consisting of P(F_{i, j} = f | class = c)
    */
-  const vector<vector<vector<vector<double>>>>& GetPixelProbability() const;
+  const vec4& GetConditionalProbability() const;
   
   /**
    * Writes the prior probabilities P(class = c) and 
    * conditional probabilities P(F_{i, j} = f | class = c) to a file,
    * namely trained model.
    * @param output_file the file to write to
-   * @param data_processor the data processor itself
+   * @param naive_bayes_model the data processor itself
    * @return output file after writing
    */
   friend std::ostream &operator<<(std::ostream& output_file,
-                                  DataProcessor& data_processor);
+                                  NaiveBayesModel& naive_bayes_model);
 
   /**
    * Reads the prior probabilities P(class = c) and 
    * conditional probabilities P(F_{i, j} = f | class = c) from a file,
    * namely the trained model.
    * @param input_file the file to read
-   * @param data_processor the data processor itself
+   * @param naive_bayes_model the data processor itself
    * @return input file after reading
    */
   friend std::istream &operator>>(std::istream& input_file,
-                                  DataProcessor& data_processor);
+                                  NaiveBayesModel& naive_bayes_model);
+  // no friend, instead, 
+  // use std::istream &operator<<(std::istream& input_file)
+  // and naive_bayes_model << input_file
   
 private:
   /**
@@ -110,7 +117,8 @@ private:
   std::map<int, double> class_probabilities_;
 
   // A vector of P(F_{i, j} = f | class = c)
-  vector<vector<vector<vector<double>>>> pixel_probabilities_;
+  // pixel_probabilities_[i][j][f][c]
+  vec4 pixel_probabilities_;
 };
 
 } // namespace naivebayes

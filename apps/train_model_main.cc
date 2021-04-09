@@ -1,5 +1,5 @@
 #include "core/data_converter.h"
-#include "core/data_processor.h"
+#include "core/naive_bayes_model.h"
 #include "core/written_number.h"
 #include "tclap/CmdLine.h"
 
@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
     std::ifstream test_input_file(argv[2]);
     
     if (input_file.is_open() && test_input_file.is_open()) {
-      DataProcessor data_processor;
-      input_file >> data_processor;
+      NaiveBayesModel naive_bayes_model;
+      input_file >> naive_bayes_model;
       
       DataConverter data_converter;
       test_input_file >> data_converter;
@@ -30,15 +30,15 @@ int main(int argc, char* argv[]) {
         size_t result = -1;
         double result_probability = log(0);
 
-        for (auto & it : data_processor.GetClassProbability()) {
+        for (auto & it : naive_bayes_model.GetPriorProbability()) {
           double score = log(it.second);
 
           for (size_t i = 0; i < data_converter.GetImageSize(); i++) {
             for (size_t j = 0; j < data_converter.GetImageSize(); j++) {
               WrittenNumber::PixelColor pixelColor =
                   written_number.GetImageVector()[i][j];
-              score += log(data_processor
-                               .GetPixelProbability()[i][j][static_cast<size_t>(
+              score += log(naive_bayes_model
+                               .GetConditionalProbability()[i][j][static_cast<size_t>(
                                    pixelColor)][it.first]);
             }
           }
@@ -81,9 +81,9 @@ int main(int argc, char* argv[]) {
       DataConverter data_converter;
       input_file >> data_converter;
 
-      DataProcessor data_processor(data_converter, std::stod(argv[1]));
+      NaiveBayesModel naive_bayes_model(data_converter, std::stod(argv[1]));
       std::ofstream output_file(argv[3]);
-      output_file << data_processor;
+      output_file << naive_bayes_model;
 
       output_file.close();
       input_file.close();
