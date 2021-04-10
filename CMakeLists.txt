@@ -51,7 +51,8 @@ include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
 list(APPEND CORE_SOURCE_FILES src/core/written_number.cpp
                               src/core/data_converter.cpp
-                              src/core/naive_bayes_model.cpp)
+                              src/core/naive_bayes_model.cpp
+                              src/core/cmd_parser.cpp)
 
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
                             src/visualizer/naive_bayes_app.cc
