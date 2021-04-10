@@ -46,7 +46,7 @@ CmdParser::CmdParser(int argc, char **argv) {
     models.emplace_back(kArtificialNeuralNetwork);
     ValuesConstraint<string> model_names(models);
     ValueArg<string> algorithm_arg("", "train", "algorithm to train with",
-                                   false, kNaiveBayes, &model_names);
+                                   true, kNaiveBayes, &model_names);
     cmd.add(algorithm_arg);
     
     // Parse each block of the entire command line input
