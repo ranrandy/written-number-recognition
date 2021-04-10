@@ -1,93 +1,59 @@
+#include "core/cmd_parser.h"
 #include "core/data_converter.h"
 #include "core/naive_bayes_model.h"
 #include "core/written_number.h"
-#include "tclap/CmdLine.h"
 
 using namespace naivebayes;
 
 int main(int argc, char* argv[]) {
+  CmdParser cmd_parser(argc, argv);
   
-  
-  // argv[1] = load_model_path
-  // argv[2] = test_file_path
-  if (argc == 3) {
-    std::ifstream input_file(argv[1]);
-    std::ifstream test_input_file(argv[2]);
+  // Trains the dataset.
+  if (cmd_parser.GetDatasetFilePath() != cmd_parser.kNoFile) {
+    DataConverter data_converter;
+    std::ifstream dataset_file_path(cmd_parser.GetDatasetFilePath());
     
-    if (input_file.is_open() && test_input_file.is_open()) {
-      NaiveBayesModel naive_bayes_model;
-      naive_bayes_model << input_file;
+    data_converter << dataset_file_path;
+    
+    if (cmd_parser.GetAlgorithm() == cmd_parser.kNaiveBayes && 
+        dataset_file_path.is_open()) {
+      NaiveBayesModel nb_model(data_converter, cmd_parser.GetNaiveBayesK());
       
-      DataConverter data_converter;
-      data_converter << test_input_file;
-      
-      std::vector<size_t> classification_result;
-      std::vector<size_t> testing_results;
-      
-      for (const WrittenNumber& written_number : data_converter.GetDataset()) {
-        testing_results.push_back(written_number.GetImageClass());
-        std::map<size_t , double> likelihood_scores;
-        size_t result = -1;
-        double result_probability = log(0);
-
-        for (auto & it : naive_bayes_model.GetPriorProbability()) {
-          double score = log(it.second);
-
-          for (size_t i = 0; i < data_converter.GetImageSize(); i++) {
-            for (size_t j = 0; j < data_converter.GetImageSize(); j++) {
-              WrittenNumber::PixelColor pixelColor =
-                  written_number.GetImageVector()[i][j];
-              score += log(naive_bayes_model
-                               .GetConditionalProbability()[i][j][static_cast<size_t>(
-                                   pixelColor)][it.first]);
-            }
-          }
-          likelihood_scores[it.first] = score;
-        }
-
-        for (auto & it : likelihood_scores) {
-          if (it.second > result_probability) {
-            result = it.first;
-            result_probability = it.second;
-          }
-        }
+      if (cmd_parser.GetSaveFilePath() != cmd_parser.kNoFile) {
+        std::ofstream model_file(cmd_parser.GetSaveFilePath());
         
-        classification_result.push_back(result);
-      }
-      
-      size_t correct_result_count = 0;
-      
-      for (size_t i = 0; i < testing_results.size(); i++) {
-        if (testing_results[i] == classification_result[i]) {
-          correct_result_count++;
+        if (model_file.is_open()) {
+          nb_model >> model_file;
         }
+        model_file.close();
       }
-      
-      std::cout << double(correct_result_count) / 
-                       double(testing_results.size()) << std::endl;
-      
-      test_input_file.close();
-      input_file.close();
     }
+    dataset_file_path.close();
   }
-
-  // argv[1] = laplace parameter
-  // argv[2] = dataset_path
-  // argv[3] = save_model_path
-  if (argc == 4) {
-    std::ifstream input_file(argv[2]);
-
-    if (input_file.is_open()) {
-      DataConverter data_converter;
-      data_converter << input_file;
-
-      NaiveBayesModel naive_bayes_model(data_converter, std::stod(argv[1]));
-      std::ofstream output_file(argv[3]);
-      naive_bayes_model >> output_file;
-
-      output_file.close();
-      input_file.close();
+  
+  // Loads the model (and tests the test dataset).
+  if (cmd_parser.GetModelFilePath() != cmd_parser.kNoFile) {
+    std::ifstream model_file_path(cmd_parser.GetModelFilePath());
+    
+    if (cmd_parser.GetAlgorithm() == cmd_parser.kNaiveBayes && 
+        model_file_path.is_open()) {
+      NaiveBayesModel nb_model;
+      nb_model << model_file_path;
+      
+      if (cmd_parser.GetTestFilePath() != cmd_parser.kNoFile) {
+        std::ifstream test_dataset_file_path(cmd_parser.GetTestFilePath());
+        
+        if (test_dataset_file_path.is_open()) {
+          DataConverter data_converter;
+          data_converter << test_dataset_file_path;
+          double model_accuracy = nb_model.EvaluateAccuracy(data_converter);
+          std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
+                    " model is " << model_accuracy << std::endl;
+        }
+        test_dataset_file_path.close();
+      }
     }
+    model_file_path.close();
   }
   return 0;
 }

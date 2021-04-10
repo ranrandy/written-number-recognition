@@ -1,3 +1,7 @@
-k "data/testimagesandlabels.txt" "data/computed_probabilities.txt"
-"data/computed_probabilities.txt" "data/testimagesandlabels.txt"
+Read and train the dataset:
+--read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/computed_probabilities.txt"
+
+Load the model and test the test dataset:
+--load "data/computed_probabilities.txt" --train "naive_bayes" --test "data/testimagesandlabels.txt"
+
 

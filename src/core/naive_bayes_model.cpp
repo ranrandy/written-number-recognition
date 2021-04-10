@@ -24,6 +24,51 @@ const NaiveBayesModel::vec4& NaiveBayesModel::GetConditionalProbability()
   return pixel_probabilities_;
 }
 
+double NaiveBayesModel::EvaluateAccuracy(const DataConverter& data_converter) {
+  std::vector<size_t> classification_result;
+  std::vector<size_t> testing_results;
+
+  for (const WrittenNumber& written_number : data_converter.GetDataset()) {
+    testing_results.push_back(written_number.GetImageClass());
+    std::map<size_t , double> likelihood_scores;
+    size_t result = -1;
+    double result_probability = log(0);
+
+    for (auto & it : GetPriorProbability()) {
+      double score = log(it.second);
+
+      for (size_t i = 0; i < data_converter.GetImageSize(); i++) {
+        for (size_t j = 0; j < data_converter.GetImageSize(); j++) {
+          WrittenNumber::PixelColor pixelColor =
+              written_number.GetImageVector()[i][j];
+          score += log(GetConditionalProbability()[i][j][static_cast<size_t>(
+              pixelColor)][it.first]);
+        }
+      }
+      likelihood_scores[it.first] = score;
+    }
+
+    for (auto & it : likelihood_scores) {
+      if (it.second > result_probability) {
+        result = it.first;
+        result_probability = it.second;
+      }
+    }
+
+    classification_result.push_back(result);
+  }
+
+  size_t correct_result_count = 0;
+
+  for (size_t i = 0; i < testing_results.size(); i++) {
+    if (testing_results[i] == classification_result[i]) {
+      correct_result_count++;
+    }
+  }
+
+  return double(correct_result_count) / double(testing_results.size());
+}
+
 void NaiveBayesModel::CountClasses(const DataConverter& data_converter) {
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     if (written_number.GetImageClass() >= 0) {

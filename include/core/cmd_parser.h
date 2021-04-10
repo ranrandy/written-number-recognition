@@ -12,6 +12,14 @@ using std::string;
  */
 class CmdParser {
 public:
+  const string kNaiveBayes = "naive_bayes";
+  const string kKNearestNeighbor = "knn";
+  const string kArtificialNeuralNetwork = "ann";
+  const string kDecisionTree = "decision_tree";
+  const string kGaussianNaiveBayes = "g_naive_bayes";
+  const string kVotingBoosting = "voting_boosting";
+  const string kNoFile = "no_file";
+  
   /**
    * Constructor for CmdParser. Create the parsing methods and parse the 
    * command line input.
@@ -57,13 +65,6 @@ public:
   double GetNaiveBayesK() const;
 
 private:
-  const string kNaiveBayes = "naive_bayes";
-  const string kKNearestNeighbor = "knn";
-  const string kArtificialNeuralNetwork = "ann";
-  const string kDecisionTree = "decision_tree";
-  const string kGaussianNaiveBayes = "g_naive_bayes";
-  const string kVotingBoosting = "voting_boosting";
-  const string kNoFile = "no_file";
   const string kProjectVersion = "0.1";
   const string kStringReturnType = "string";
   const char kDelimiter = ' ';

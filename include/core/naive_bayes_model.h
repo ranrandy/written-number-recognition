@@ -34,6 +34,13 @@ public:
                 double laplace_parameter = 0);
 
   /**
+   * Test with the testing dataset to obtain the accuracy of the model.
+   * @param data_converter a data converter containing preprocessed dataset 
+   * @return the accuracy of the model
+   */
+  double EvaluateAccuracy(const DataConverter& data_converter);
+  
+  /**
    * Gets a map containing P(class = c) data.
    * @return a map(class = c, P(class = c))
    */
