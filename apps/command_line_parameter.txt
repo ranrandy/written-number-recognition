@@ -1,7 +1,10 @@
 Read and train the dataset:
 --read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/computed_probabilities.txt"
 
-Load the model and test the test dataset:
+Load the model and classify the test dataset:
 --load "data/computed_probabilities.txt" --train "naive_bayes" --test "data/testimagesandlabels.txt"
+
+Load the dataset and classify the test dataset (based on k-nearest neighbors):
+--load "data/trainingimagesandlabels.txt" --train "knn" --test "data/testimagesandlabels.txt" --nearest_k 15
 
 

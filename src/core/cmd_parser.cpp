@@ -21,10 +21,16 @@ CmdParser::CmdParser(int argc, char **argv) {
     cmd.xorAdd(read_arg, load_arg);
     
     // Specify the parameter for an algorithm
-    ValueArg<double> parameter_arg("", "naive_bayes_k", 
-                                   "laplace parameter for naive bayes "
-                                   "algorithm", false, 0, "double");
-    cmd.add(parameter_arg);
+    ValueArg<double> nb_k_arg("", "naive_bayes_k", 
+                              "laplace parameter for naive bayes "
+                              "algorithm", false, 0, "double");
+    cmd.add(nb_k_arg);
+
+    // Specify the parameter for an algorithm
+    ValueArg<size_t> nearest_k_arg("", "nearest_k",
+                                   "parameter k for k nearest neighbor "
+                                   "algorithm", false, 10, "size_t");
+    cmd.add(nearest_k_arg);
 
     // Specify whether to save the trained model to a file or not
     ValueArg<string> save_arg("s", "save", "save to file", false, kNoFile,
@@ -57,7 +63,8 @@ CmdParser::CmdParser(int argc, char **argv) {
     model_file_path_ = load_arg.getValue();
     save_file_path_ = save_arg.getValue();
     algorithm_ = algorithm_arg.getValue();
-    naive_bayes_k = parameter_arg.getValue();
+    naive_bayes_k_ = nb_k_arg.getValue();
+    nearest_k_ = nearest_k_arg.getValue();
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << 
         std::endl;
@@ -85,7 +92,11 @@ const string& CmdParser::GetAlgorithm() const {
 }
  
 double CmdParser::GetNaiveBayesK() const {
-  return naive_bayes_k;
+  return naive_bayes_k_;
+}
+
+double CmdParser::GetNearestK() const {
+  return nearest_k_;
 }
 
 } // naivebayes

@@ -69,9 +69,6 @@ public:
    * @return input file after reading
    */
   std::istream& operator<<(std::istream& input_file);
-  // no friend, instead, 
-  // use std::istream &operator<<(std::istream& input_file)
-  // and naive_bayes_model << input_file
   
 private:
   /**

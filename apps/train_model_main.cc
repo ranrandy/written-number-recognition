@@ -1,6 +1,7 @@
 #include "core/cmd_parser.h"
 #include "core/data_converter.h"
 #include "core/naive_bayes_classifier.h"
+#include "core/k_nearest_neighbors_classifier.h"
 #include "core/written_number.h"
 
 using namespace naivebayes;
@@ -31,7 +32,7 @@ int main(int argc, char* argv[]) {
     dataset_file_path.close();
   }
   
-  // Loads the model (and tests the test dataset).
+  // Loads the model / dataset (and tests the test dataset).
   if (cmd_parser.GetModelFilePath() != cmd_parser.kNoFile) {
     std::ifstream model_file_path(cmd_parser.GetModelFilePath());
     
@@ -47,6 +48,29 @@ int main(int argc, char* argv[]) {
           DataConverter data_converter;
           data_converter << test_dataset_file_path;
           double model_accuracy = nb_model.EvaluateAccuracy(data_converter);
+          std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
+                    " model is " << model_accuracy << std::endl;
+        }
+        test_dataset_file_path.close();
+      }
+    }
+    
+    if (cmd_parser.GetAlgorithm() == cmd_parser.kKNearestNeighbor && 
+        model_file_path.is_open()) {
+      KNearestNeighborClassifier knn_model;
+      DataConverter dataset_converter;
+      dataset_converter << model_file_path;
+      
+      if (cmd_parser.GetTestFilePath() != cmd_parser.kNoFile) {
+        std::ifstream test_dataset_file_path(cmd_parser.GetTestFilePath());
+
+        if (test_dataset_file_path.is_open()) {
+          DataConverter test_data_converter;
+          test_data_converter << test_dataset_file_path;
+          double model_accuracy = 
+              knn_model.EvaluateAccuracy(test_data_converter, 
+                                         dataset_converter, 
+                                         cmd_parser.GetNearestK());
           std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
                     " model is " << model_accuracy << std::endl;
         }

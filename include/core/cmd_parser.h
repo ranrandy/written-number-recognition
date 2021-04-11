@@ -63,6 +63,12 @@ public:
    * @return the laplace smoothing parameter k for naive bayes algorithm
    */
   double GetNaiveBayesK() const;
+  
+  /**
+   * Gets the parameter for k nearest neighbors algorithm.
+   * @return the parameter for k nearest neighbors algorithm.
+   */
+  double GetNearestK() const;
 
 private:
   const string kProjectVersion = "0.1";
@@ -75,7 +81,8 @@ private:
   string save_file_path_;
   string algorithm_;
   
-  double naive_bayes_k;
+  double naive_bayes_k_;
+  double nearest_k_;
 };
 
 } // namespace naivebayes
