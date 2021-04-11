@@ -51,7 +51,7 @@ include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
 list(APPEND CORE_SOURCE_FILES src/core/written_number.cpp
                               src/core/data_converter.cpp
-                              src/core/naive_bayes_model.cpp
+                              src/core/naive_bayes_classifier.cpp
                               src/core/cmd_parser.cpp)
 
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
@@ -59,7 +59,7 @@ list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
                             src/visualizer/sketchpad.cc)
 
 list(APPEND TEST_FILES tests/test_data_converter.cc
-                       tests/test_naive_bayes_model.cpp)
+        tests/test_naive_bayes_classifier.cpp)
 
 add_executable(train-model apps/train_model_main.cc ${CORE_SOURCE_FILES})
 target_include_directories(train-model PRIVATE include)

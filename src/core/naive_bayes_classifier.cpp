@@ -1,10 +1,10 @@
-#include "core/naive_bayes_model.h"
+#include "core/naive_bayes_classifier.h"
 
 namespace naivebayes {
 
-NaiveBayesModel::NaiveBayesModel() {}
+NaiveBayesClassifier::NaiveBayesClassifier() {}
 
-NaiveBayesModel::NaiveBayesModel(const DataConverter& data_converter,
+NaiveBayesClassifier::NaiveBayesClassifier(const DataConverter& data_converter,
                              double laplace_parameter) {
   laplace_parameter_ = laplace_parameter;
   CountClasses(data_converter);
@@ -15,23 +15,23 @@ NaiveBayesModel::NaiveBayesModel(const DataConverter& data_converter,
   CalculateProbabilityForPixels(data_converter);
 }
 
-const std::map<int, double>& NaiveBayesModel::GetPriorProbability() const {
+const std::map<int, double>& NaiveBayesClassifier::GetPriorProbability() const {
   return class_probabilities_;
 }
 
-const NaiveBayesModel::vec4& NaiveBayesModel::GetConditionalProbability() 
+const NaiveBayesClassifier::vec4& NaiveBayesClassifier::GetConditionalProbability() 
     const {
   return pixel_probabilities_;
 }
 
-double NaiveBayesModel::EvaluateAccuracy(const DataConverter& data_converter) {
+double NaiveBayesClassifier::EvaluateAccuracy(const DataConverter& data_converter) {
   std::vector<size_t> classification_result;
   std::vector<size_t> testing_results;
 
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     testing_results.push_back(written_number.GetImageClass());
     std::map<size_t , double> likelihood_scores;
-    size_t result = -1;
+    size_t result = 0;
     double result_probability = log(0);
 
     for (auto & it : GetPriorProbability()) {
@@ -69,7 +69,7 @@ double NaiveBayesModel::EvaluateAccuracy(const DataConverter& data_converter) {
   return double(correct_result_count) / double(testing_results.size());
 }
 
-void NaiveBayesModel::CountClasses(const DataConverter& data_converter) {
+void NaiveBayesClassifier::CountClasses(const DataConverter& data_converter) {
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     if (written_number.GetImageClass() >= 0) {
       class_count_[written_number.GetImageClass()]++;
@@ -77,7 +77,7 @@ void NaiveBayesModel::CountClasses(const DataConverter& data_converter) {
   }
 }
 
-void NaiveBayesModel::CalculateProbabilityForClasses(
+void NaiveBayesClassifier::CalculateProbabilityForClasses(
     const DataConverter& data_converter) {
   for (auto & it : class_count_) {
      class_probabilities_[it.first] =
@@ -87,7 +87,7 @@ void NaiveBayesModel::CalculateProbabilityForClasses(
   }
 }
 
-void NaiveBayesModel::InitiatePixelProbabilities(size_t image_size, 
+void NaiveBayesClassifier::InitiatePixelProbabilities(size_t image_size, 
                                                size_t color_count, 
                                                size_t max_number) {
   // Initializes a 4D vector whose size info for each layer is 
@@ -98,7 +98,7 @@ void NaiveBayesModel::InitiatePixelProbabilities(size_t image_size,
                                         vector<double>(max_number + 1, 0))));
 }
 
-void NaiveBayesModel::CalculateProbabilityForPixels(
+void NaiveBayesClassifier::CalculateProbabilityForPixels(
     const DataConverter& data_converter) {
   // Assigns each P(F_{i, j} = f | class = c) with
   // k / (pixel_color_count * k + # classes belonging to class c).
@@ -130,7 +130,7 @@ void NaiveBayesModel::CalculateProbabilityForPixels(
   }
 }
 
-std::ostream& NaiveBayesModel::operator>>(std::ostream& output_file) {
+std::ostream& NaiveBayesClassifier::operator>>(std::ostream& output_file) {
   size_t image_size = pixel_probabilities_.size();
   size_t color_total = pixel_probabilities_[0][0].size();
   size_t max_number = pixel_probabilities_[0][0][0].size();
@@ -165,7 +165,7 @@ std::ostream& NaiveBayesModel::operator>>(std::ostream& output_file) {
   return output_file;
 }
 
-std::istream& NaiveBayesModel::operator<<(std::istream& input_file) {
+std::istream& NaiveBayesClassifier::operator<<(std::istream& input_file) {
   std::string line;
   
   // Reads the image size, number of colors and number of written 
@@ -212,7 +212,7 @@ std::istream& NaiveBayesModel::operator<<(std::istream& input_file) {
   return input_file;
 }
 
-vector<std::string> NaiveBayesModel::SplitDataStrings(
+vector<std::string> NaiveBayesClassifier::SplitDataStrings(
     const std::string& line, char splitter) {
   std::stringstream ss(line);
   std::string element;

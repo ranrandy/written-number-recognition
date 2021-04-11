@@ -1,6 +1,6 @@
 #include "core/cmd_parser.h"
 #include "core/data_converter.h"
-#include "core/naive_bayes_model.h"
+#include "core/naive_bayes_classifier.h"
 #include "core/written_number.h"
 
 using namespace naivebayes;
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     
     if (cmd_parser.GetAlgorithm() == cmd_parser.kNaiveBayes && 
         dataset_file_path.is_open()) {
-      NaiveBayesModel nb_model(data_converter, cmd_parser.GetNaiveBayesK());
+      NaiveBayesClassifier nb_model(data_converter, cmd_parser.GetNaiveBayesK());
       
       if (cmd_parser.GetSaveFilePath() != cmd_parser.kNoFile) {
         std::ofstream model_file(cmd_parser.GetSaveFilePath());
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     
     if (cmd_parser.GetAlgorithm() == cmd_parser.kNaiveBayes && 
         model_file_path.is_open()) {
-      NaiveBayesModel nb_model;
+      NaiveBayesClassifier nb_model;
       nb_model << model_file_path;
       
       if (cmd_parser.GetTestFilePath() != cmd_parser.kNoFile) {

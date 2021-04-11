@@ -14,7 +14,7 @@ using std::vector;
  * Process the data to get probabilities for P(class = c) and
  * P(F_{i, j} = f | class = c).
  */
-class NaiveBayesModel {
+class NaiveBayesClassifier {
 public:
   typedef vector<vector<vector<vector<double>>>> vec4;
   typedef vector<vector<vector<double>>> vec3;
@@ -23,14 +23,14 @@ public:
   /**
    * Default constructor used before loading model from a file.
    */
-  NaiveBayesModel();
+  NaiveBayesClassifier();
   
   /**
    * Constructor for processing the dataset to get the probabilities info.
    * @param data_converter a data converter containing preprocessed dataset
    * @param laplace_parameter the laplace smoothing parameter for processing
    */
-  NaiveBayesModel(const DataConverter& data_converter,
+  NaiveBayesClassifier(const DataConverter& data_converter,
                 double laplace_parameter = 0);
 
   /**
