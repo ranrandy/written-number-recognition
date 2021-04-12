@@ -12,17 +12,17 @@ Sketchpad::Sketchpad(const vec2& top_left_corner, size_t num_pixels_per_side,
       num_pixels_per_side_(num_pixels_per_side),
       pixel_side_length_(sketchpad_size / num_pixels_per_side),
       brush_radius_(brush_radius) {
-  shaded_pixels_ = 
-      std::vector<std::vector<bool>>(num_pixels_per_side, 
-                                     std::vector<bool>(
-                                         num_pixels_per_side, false));
+  shaded_pixels_ =
+      image(num_pixels_per_side_,
+            std::vector<WrittenNumber::PixelColor>(
+                num_pixels_per_side_, WrittenNumber::PixelColor::kWhite));
 }
 
 void Sketchpad::Draw() const {
   for (size_t row = 0; row < num_pixels_per_side_; ++row) {
     for (size_t col = 0; col < num_pixels_per_side_; ++col) {
       // Checks if the pixel at (row, col) is currently shaded
-      if (shaded_pixels_[row][col]) {
+      if (shaded_pixels_[row][col] == WrittenNumber::PixelColor::kBlack) {
         ci::gl::color(ci::Color::gray(0.3f));
       } else {
         ci::gl::color(ci::Color("white"));
@@ -53,7 +53,7 @@ void Sketchpad::HandleBrush(const vec2& brush_screen_coords) {
 
       if (glm::distance(brush_sketchpad_coords, pixel_center) <=
           brush_radius_) {
-        shaded_pixels_[row][col] = true;
+        shaded_pixels_[row][col] = WrittenNumber::PixelColor::kBlack;
       }
     }
   }
@@ -61,9 +61,14 @@ void Sketchpad::HandleBrush(const vec2& brush_screen_coords) {
 
 void Sketchpad::Clear() {
   shaded_pixels_ =
-      std::vector<std::vector<bool>>(num_pixels_per_side_,
-                                     std::vector<bool>(
-                                         num_pixels_per_side_, false));}
+      image(num_pixels_per_side_, 
+            std::vector<WrittenNumber::PixelColor>(
+                num_pixels_per_side_, WrittenNumber::PixelColor::kWhite));
+}
+
+const Sketchpad::image& Sketchpad::GetShadedPixels() const {
+  return shaded_pixels_;
+}
 
 }  // namespace visualizer
 

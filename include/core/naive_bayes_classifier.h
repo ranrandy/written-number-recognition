@@ -41,6 +41,14 @@ public:
   double EvaluateAccuracy(const DataConverter& data_converter);
   
   /**
+   * Classify one hand written number.
+   * @param image_vector a 2D vector representing pixels of a written number
+   * @return the classification result of this written number
+   */
+  size_t Classify(const vector<vector<WrittenNumber::PixelColor>>& 
+                      image_vector);
+  
+  /**
    * Gets a map containing P(class = c) data.
    * @return a map(class = c, P(class = c))
    */

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cinder/gl/gl.h"
+#include "core/written_number.h"
 
 namespace naivebayes {
 
@@ -12,6 +13,8 @@ namespace visualizer {
  * same format as the Naive Bayes image data files.
  */
 class Sketchpad {
+ typedef std::vector<std::vector<WrittenNumber::PixelColor>> image;
+ 
  public:
   /**
    * Creates a sketchpad.
@@ -49,8 +52,15 @@ class Sketchpad {
    */
   void Clear();
 
+  /**
+   * Gets the shaded pixels on the sketchpad so that the app can apply the
+   * naive bayes model to classify the image.
+   * @return shaded pixels
+   */
+  const image& GetShadedPixels() const;
+
  private:
-  std::vector<std::vector<bool>> shaded_pixels_;
+  image shaded_pixels_;
   
   glm::vec2 top_left_corner_;
 

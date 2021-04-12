@@ -1,6 +1,10 @@
 Read and train the dataset:
 --read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/computed_probabilities.txt"
 
+Read and train the dataset for the app:
+--read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/naive_bayes_app_model.txt"
+
+
 Load the model and classify the test dataset:
 --load "data/computed_probabilities.txt" --train "naive_bayes" --test "data/testimagesandlabels.txt"
 

@@ -4,6 +4,7 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "sketchpad.h"
+#include "core/naive_bayes_classifier.h"
 
 namespace naivebayes {
 
@@ -28,6 +29,7 @@ class NaiveBayesApp : public ci::app::App {
   const size_t kImageDimension = 28;
 
  private:
+  NaiveBayesClassifier naive_bayes_classifier_;
   Sketchpad sketchpad_;
   int current_prediction_ = -1;
 };
