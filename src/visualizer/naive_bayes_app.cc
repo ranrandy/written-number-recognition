@@ -44,6 +44,7 @@ void NaiveBayesApp::keyDown(ci::app::KeyEvent event) {
 
     case ci::app::KeyEvent::KEY_DELETE:
       sketchpad_.Clear();
+      current_prediction_ = -1;
       break;
   }
 }
