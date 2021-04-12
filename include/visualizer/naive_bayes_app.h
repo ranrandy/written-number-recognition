@@ -22,7 +22,6 @@ class NaiveBayesApp : public ci::app::App {
   void mouseDrag(ci::app::MouseEvent event) override;
   void keyDown(ci::app::KeyEvent event) override;
 
-  // TODO: Delete this comment. Feel free to play around with these variables
   // provided that you can see the entire UI on your screen.
   const double kWindowSize = 875;
   const double kMargin = 100;

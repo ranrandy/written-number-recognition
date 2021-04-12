@@ -60,8 +60,10 @@ void Sketchpad::HandleBrush(const vec2& brush_screen_coords) {
 }
 
 void Sketchpad::Clear() {
-  // TODO: implement this method
-}
+  shaded_pixels_ =
+      std::vector<std::vector<bool>>(num_pixels_per_side_,
+                                     std::vector<bool>(
+                                         num_pixels_per_side_, false));}
 
 }  // namespace visualizer
 
