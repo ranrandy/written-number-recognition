@@ -50,6 +50,8 @@ class Sketchpad {
   void Clear();
 
  private:
+  std::vector<std::vector<bool>> shaded_pixels_;
+  
   glm::vec2 top_left_corner_;
 
   size_t num_pixels_per_side_;
