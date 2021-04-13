@@ -8,7 +8,7 @@ using TCLAP::ValuesConstraint;
 using std::vector;
 using std::string;
 
-CmdParser::CmdParser(int argc, char **argv) {
+CmdParser::CmdParser(int argc, char* argv[]) {
   try {
     CmdLine cmd("Command description message", kDelimiter, kProjectVersion);
 

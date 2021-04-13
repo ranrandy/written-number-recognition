@@ -1,14 +1,21 @@
-Read and train the dataset:
---read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/computed_probabilities.txt"
+Read and train the dataset (k = 0.9):
+--read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/naive_bayes_model.txt"
 
-Read and train the dataset for the app:
+Read and train the dataset for the app: (After specify '+' to kBlack in the data_converter)
 --read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/naive_bayes_app_model.txt"
 
 
+
+
 Load the model and classify the test dataset:
---load "data/computed_probabilities.txt" --train "naive_bayes" --test "data/testimagesandlabels.txt"
+--load "data/naive_bayes_model.txt" --train "naive_bayes" --test "data/testimagesandlabels.txt"
 
 Load the dataset and classify the test dataset (based on k-nearest neighbors):
 --load "data/trainingimagesandlabels.txt" --train "knn" --test "data/testimagesandlabels.txt" --nearest_k 15
 
 
+
+
+
+Read and train the dataset using naive bayes algorithm, then save the model and test it using a testing dataset (k = 0.9):
+--read "data/trainingimagesandlabels.txt" --train "naive_bayes" --naive_bayes_k 0.9 -s "data/naive_bayes_model.txt" --test "data/testimagesandlabels.txt"

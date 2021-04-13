@@ -17,7 +17,7 @@ public:
   const string kArtificialNeuralNetwork = "ann";
   const string kDecisionTree = "decision_tree";
   const string kGaussianNaiveBayes = "g_naive_bayes";
-  const string kVotingBoosting = "voting_boosting";
+  const string kVotingBoosting = "boosting";
   const string kNoFile = "no_file";
   
   /**

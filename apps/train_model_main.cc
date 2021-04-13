@@ -18,7 +18,8 @@ int main(int argc, char* argv[]) {
     
     if (cmd_parser.GetAlgorithm() == cmd_parser.kNaiveBayes && 
         dataset_file_path.is_open()) {
-      NaiveBayesClassifier nb_model(data_converter, cmd_parser.GetNaiveBayesK());
+      NaiveBayesClassifier nb_model;
+      nb_model.Train(data_converter, cmd_parser.GetNaiveBayesK());
       
       if (cmd_parser.GetSaveFilePath() != cmd_parser.kNoFile) {
         std::ofstream model_file(cmd_parser.GetSaveFilePath());
@@ -28,6 +29,20 @@ int main(int argc, char* argv[]) {
         }
         model_file.close();
       }
+
+      if (cmd_parser.GetTestFilePath() != cmd_parser.kNoFile) {
+        std::ifstream test_dataset_file_path(cmd_parser.GetTestFilePath());
+
+        if (test_dataset_file_path.is_open()) {
+          DataConverter test_data_converter;
+          test_data_converter << test_dataset_file_path;
+          double model_accuracy = 
+              nb_model.EvaluateAccuracy(test_data_converter);
+          std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
+                    " model is " << model_accuracy << std::endl;
+        }
+        test_dataset_file_path.close();
+      }
     }
     dataset_file_path.close();
   }
@@ -36,6 +51,7 @@ int main(int argc, char* argv[]) {
   if (cmd_parser.GetModelFilePath() != cmd_parser.kNoFile) {
     std::ifstream model_file_path(cmd_parser.GetModelFilePath());
     
+    // Classify (Naive Bayes)
     if (cmd_parser.GetAlgorithm() == cmd_parser.kNaiveBayes && 
         model_file_path.is_open()) {
       NaiveBayesClassifier nb_model;
@@ -55,6 +71,7 @@ int main(int argc, char* argv[]) {
       }
     }
     
+    // Classify (K Nearest Neighbors)
     if (cmd_parser.GetAlgorithm() == cmd_parser.kKNearestNeighbor && 
         model_file_path.is_open()) {
       KNearestNeighborClassifier knn_model;
