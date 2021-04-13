@@ -8,6 +8,16 @@ using naivebayes::WrittenNumber;
 
 TEST_CASE("Overload << operator to read the data") {
   DataConverter data_converter;
+  
+  SECTION("Empty dataset") {
+    std::ifstream input_file("data/test_empty_dataset.txt");
+    data_converter << input_file;
+    REQUIRE(data_converter.GetImageSize() == 0);
+    REQUIRE(data_converter.GetDataset().empty());
+    REQUIRE(data_converter.GetImageClassCount() == 0);
+    REQUIRE(data_converter.GetMaxWrittenNumber() == 0);
+  }
+  
   SECTION("Normal image size data (size = 28)") {
     std::ifstream input_file("data/test_normal_images.txt");
     data_converter << input_file;
