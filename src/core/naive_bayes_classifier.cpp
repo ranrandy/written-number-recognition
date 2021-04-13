@@ -4,8 +4,8 @@ namespace naivebayes {
 
 NaiveBayesClassifier::NaiveBayesClassifier() {}
 
-NaiveBayesClassifier::NaiveBayesClassifier(const DataConverter& data_converter,
-                             double laplace_parameter) {
+void NaiveBayesClassifier::Train(const DataConverter& data_converter, 
+                                 double laplace_parameter) {
   laplace_parameter_ = laplace_parameter;
   CountClasses(data_converter);
   CalculateProbabilityForClasses(data_converter);
@@ -41,7 +41,6 @@ double NaiveBayesClassifier::EvaluateAccuracy(const DataConverter& data_converte
       correct_result_count++;
     }
   }
-
   return double(correct_result_count) / double(testing_results.size());
 }
 

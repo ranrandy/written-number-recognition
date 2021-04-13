@@ -21,7 +21,7 @@ public:
   typedef vector<vector<double>> vec2;
   
   /**
-   * Default constructor used before loading model from a file.
+   * Default constructor. Constructs a naive bayes classifier.
    */
   NaiveBayesClassifier();
   
@@ -30,8 +30,7 @@ public:
    * @param data_converter a data converter containing preprocessed dataset
    * @param laplace_parameter the laplace smoothing parameter for processing
    */
-  NaiveBayesClassifier(const DataConverter& data_converter,
-                double laplace_parameter = 0);
+  void Train(const DataConverter& data_converter, double laplace_parameter = 0);
 
   /**
    * Test with the testing dataset to obtain the accuracy of the model.
