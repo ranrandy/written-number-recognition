@@ -19,29 +19,36 @@ const std::map<int, double>& NaiveBayesClassifier::GetPriorProbability() const {
   return class_probabilities_;
 }
 
-const NaiveBayesClassifier::vec4& NaiveBayesClassifier::GetConditionalProbability() 
-    const {
+const NaiveBayesClassifier::vec4& NaiveBayesClassifier::
+    GetConditionalProbability() const {
   return pixel_probabilities_;
 }
 
-double NaiveBayesClassifier::EvaluateAccuracy(const DataConverter& data_converter) {
-  vector<size_t> classification_results;
-  vector<size_t> testing_results;
+const std::vector<size_t>& NaiveBayesClassifier::GetTestingResults() const {
+  return testing_results_;
+}
 
+const std::vector<size_t>& NaiveBayesClassifier::GetClassificationResults() 
+    const {
+  return classification_results_;   
+}
+
+double NaiveBayesClassifier::EvaluateAccuracy(
+    const DataConverter& data_converter) {
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     size_t classification_result = Classify(written_number.GetImageVector());
-    testing_results.push_back(written_number.GetImageClass());
-    classification_results.push_back(classification_result);
+    testing_results_.push_back(written_number.GetImageClass());
+    classification_results_.push_back(classification_result);
   }
 
   size_t correct_result_count = 0;
 
-  for (size_t i = 0; i < testing_results.size(); i++) {
-    if (testing_results[i] == classification_results[i]) {
+  for (size_t i = 0; i < testing_results_.size(); i++) {
+    if (testing_results_[i] == classification_results_[i]) {
       correct_result_count++;
     }
   }
-  return double(correct_result_count) / double(testing_results.size());
+  return double(correct_result_count) / double(testing_results_.size());
 }
 
 size_t NaiveBayesClassifier::Classify(
@@ -70,6 +77,26 @@ size_t NaiveBayesClassifier::Classify(
     }
   }
   return result;
+}
+
+void NaiveBayesClassifier::OutputConfusingMatrix() {
+  std::vector<size_t> predicted_row(class_count_.size(), 0);
+  std::vector<std::vector<size_t>> matrix(class_count_.size(), predicted_row);
+  
+  for (size_t actual = 0; actual < class_count_.size(); actual++) {
+    for (size_t predicted = 0; predicted < class_count_.size(); predicted++) {
+      size_t total = 0;
+      for (size_t i = 0; i < GetTestingResults().size(); i++) {
+        if (GetTestingResults().at(i) == actual && 
+            GetClassificationResults().at(i) == predicted) {
+          total++;
+        }
+      }
+      matrix[actual][predicted] = total;
+      std::cout << total << "\t";
+    }
+    std::cout << std::endl;
+  }
 }
 
 void NaiveBayesClassifier::CountClasses(const DataConverter& data_converter) {

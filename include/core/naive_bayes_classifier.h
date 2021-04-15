@@ -60,6 +60,23 @@ public:
   const vec4& GetConditionalProbability() const;
   
   /**
+   * Gets a vector of correct classification results.
+   * @return a vector of correct classification results
+   */
+  const std::vector<size_t>& GetTestingResults() const;
+
+  /**
+   * Gets a vector of classfication results based on naive bayes algorithm.
+   * @return a vector of classification results based on this model
+   */
+  const std::vector<size_t>& GetClassificationResults() const;
+  
+  /**
+   * Output the confusing matrix for the current classification.
+   */
+  void OutputConfusingMatrix();
+  
+  /**
    * Writes the prior probabilities P(class = c) and 
    * conditional probabilities P(F_{i, j} = f | class = c) to a file,
    * namely trained model.
@@ -126,6 +143,9 @@ private:
   // A vector of P(F_{i, j} = f | class = c)
   // pixel_probabilities_[i][j][f][c]
   vec4 pixel_probabilities_;
+
+  vector<size_t> classification_results_;
+  vector<size_t> testing_results_;
 };
 
 } // namespace naivebayes

@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
               nb_model.EvaluateAccuracy(test_data_converter);
           std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
                     " model is " << model_accuracy << std::endl;
+          nb_model.OutputConfusingMatrix();
         }
         test_dataset_file_path.close();
       }
@@ -66,6 +67,7 @@ int main(int argc, char* argv[]) {
           double model_accuracy = nb_model.EvaluateAccuracy(data_converter);
           std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
                     " model is " << model_accuracy << std::endl;
+          nb_model.OutputConfusingMatrix();
         }
         test_dataset_file_path.close();
       }
