@@ -52,10 +52,10 @@ size_t KNearestNeighborClassifier::Classify(
   // in the k nearest neighbors.
   size_t classified_result;
   size_t occurrence = 0;
-  for (auto & it : class_occurrences) {
-    if (it.second > occurrence) {
-      classified_result = it.first;
-      occurrence = it.second;
+  for (auto & class_count : class_occurrences) {
+    if (class_count.second > occurrence) {
+      classified_result = class_count.first;
+      occurrence = class_count.second;
     }
   }
   return classified_result;

@@ -140,8 +140,8 @@ TEST_CASE("Classify one image") {
       data_converter.GetDataset()[0].GetImageVector());
   
   std::vector<double> results(10);
-  for (auto & it : naive_bayes_model.GetPriorProbability()) {
-    double score = log(it.second);
+  for (auto & prior_probability : naive_bayes_model.GetPriorProbability()) {
+    double score = log(prior_probability.second);
 
     for (size_t i = 0; i < data_converter.GetImageSize(); i++) {
       for (size_t j = 0; j < data_converter.GetImageSize(); j++) {
@@ -149,10 +149,10 @@ TEST_CASE("Classify one image") {
             data_converter.GetDataset()[0].GetImageVector()[i][j];
         score += log(naive_bayes_model.
                      GetConditionalProbability()[i][j][static_cast<size_t>(
-                         pixelColor)][it.first]);
+                         pixelColor)][prior_probability.first]);
       }
     }
-    results[it.first] = score;
+    results[prior_probability.first] = score;
   }
   
   for (size_t i = 0; i < 10; i++) {

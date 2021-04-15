@@ -50,23 +50,23 @@ size_t NaiveBayesClassifier::Classify(
   size_t result = 0;
   double result_probability = log(0);
 
-  for (auto & it : GetPriorProbability()) {
-    double score = log(it.second);
+  for (auto & prior_probability : GetPriorProbability()) {
+    double score = log(prior_probability.second);
 
     for (size_t i = 0; i < image_vector.size(); i++) {
       for (size_t j = 0; j < image_vector[i].size(); j++) {
         WrittenNumber::PixelColor pixelColor = image_vector[i][j];
         score += log(GetConditionalProbability()[i][j][static_cast<size_t>(
-            pixelColor)][it.first]);
+            pixelColor)][prior_probability.first]);
       }
     }
-    likelihood_scores[it.first] = score;
+    likelihood_scores[prior_probability.first] = score;
   }
 
-  for (auto & it : likelihood_scores) {
-    if (it.second > result_probability) {
-      result = it.first;
-      result_probability = it.second;
+  for (auto & score : likelihood_scores) {
+    if (score.second > result_probability) {
+      result = score.first;
+      result_probability = score.second;
     }
   }
   return result;
@@ -82,9 +82,9 @@ void NaiveBayesClassifier::CountClasses(const DataConverter& data_converter) {
 
 void NaiveBayesClassifier::CalculateProbabilityForClasses(
     const DataConverter& data_converter) {
-  for (auto & it : class_count_) {
-     class_probabilities_[it.first] =
-        (laplace_parameter_ + it.second) /
+  for (auto & class_number : class_count_) {
+     class_probabilities_[class_number.first] =
+        (laplace_parameter_ + class_number.second) /
         (data_converter.GetImageClassCount() * laplace_parameter_ +
          data_converter.GetDataset().size());
   }
@@ -144,8 +144,9 @@ std::ostream& NaiveBayesClassifier::operator>>(std::ostream& output_file) {
       " " << std::endl;
   
   // Outputs prior probabilities first.
-  for (auto & it : class_probabilities_) {
-    output_file << it.first << " " << it.second << std::endl; 
+  for (auto & prior_probability : class_probabilities_) {
+    output_file << prior_probability.first << " " << 
+        prior_probability.second << std::endl; 
   }
   
   // Outputs a blank line between prior and conditional probabilities.
