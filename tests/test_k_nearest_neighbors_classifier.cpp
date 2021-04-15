@@ -3,11 +3,11 @@
 #include "core/k_nearest_neighbors_classifier.h"
 
 using naivebayes::KNearestNeighborClassifier;
-using naivebayes::DataConverter;
+using naivebayes::Dataset;
 
 TEST_CASE("Classify one written number") {
-  DataConverter dataset_converter;
-  DataConverter test_data_converter;
+  Dataset dataset_converter;
+  Dataset test_data_converter;
   
   std::ifstream dataset_file("data/test_normal_images.txt");
   std::ifstream test_data_file("data/test_one_written_number.txt");

@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
   
   // Trains the dataset.
   if (cmd_parser.GetDatasetFilePath() != cmd_parser.kNoFile) {
-    DataConverter data_converter;
+    Dataset data_converter;
     std::ifstream dataset_file_path(cmd_parser.GetDatasetFilePath());
     
     data_converter << dataset_file_path;
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
         std::ifstream test_dataset_file_path(cmd_parser.GetTestFilePath());
 
         if (test_dataset_file_path.is_open()) {
-          DataConverter test_data_converter;
+          Dataset test_data_converter;
           test_data_converter << test_dataset_file_path;
           double model_accuracy = 
               nb_model.EvaluateAccuracy(test_data_converter);
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
         std::ifstream test_dataset_file_path(cmd_parser.GetTestFilePath());
         
         if (test_dataset_file_path.is_open()) {
-          DataConverter data_converter;
+          Dataset data_converter;
           data_converter << test_dataset_file_path;
           double model_accuracy = nb_model.EvaluateAccuracy(data_converter);
           std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
@@ -77,14 +77,14 @@ int main(int argc, char* argv[]) {
     if (cmd_parser.GetAlgorithm() == cmd_parser.kKNearestNeighbor && 
         model_file_path.is_open()) {
       KNearestNeighborClassifier knn_model;
-      DataConverter dataset_converter;
+      Dataset dataset_converter;
       dataset_converter << model_file_path;
       
       if (cmd_parser.GetTestFilePath() != cmd_parser.kNoFile) {
         std::ifstream test_dataset_file_path(cmd_parser.GetTestFilePath());
 
         if (test_dataset_file_path.is_open()) {
-          DataConverter test_data_converter;
+          Dataset test_data_converter;
           test_data_converter << test_dataset_file_path;
           double model_accuracy = 
               knn_model.EvaluateAccuracy(test_data_converter, 
@@ -92,6 +92,7 @@ int main(int argc, char* argv[]) {
                                          cmd_parser.GetNearestK());
           std::cout << "The accuracy of the " << cmd_parser.GetAlgorithm() <<
                     " model is " << model_accuracy << std::endl;
+          knn_model.OutputConfusingMatrix();
         }
         test_dataset_file_path.close();
       }

@@ -4,7 +4,7 @@
 #include "core/naive_bayes_classifier.h"
 #include "core/written_number.h"
 
-using naivebayes::DataConverter;
+using naivebayes::Dataset;
 using naivebayes::WrittenNumber;
 using naivebayes::NaiveBayesClassifier;
 using std::map;
@@ -16,7 +16,7 @@ vector<string> SplitDataStrings(const string& line, char splitter);
 TEST_CASE("Calculate P(class = c), the prior probability") {
   string data_file_path = "data/test_normal_images.txt";
   std::ifstream input_file(data_file_path);
-  DataConverter data_converter;
+  Dataset data_converter;
   data_converter << input_file;
   map<int, double> image_class_probabilities;
 
@@ -41,7 +41,7 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c), "
           "the conditional probability") {
   string data_file_path = "data/test_normal_images.txt";
   std::ifstream input_file(data_file_path);
-  DataConverter data_converter;
+  Dataset data_converter;
   data_converter << input_file;
   vector<vector<vector<vector<double>>>> pixel_probabilities;
 
@@ -69,7 +69,7 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c), "
 TEST_CASE("Processing for arbitrary image sizes") {
   string data_file_path = "data/test_smaller_images.txt";
   std::ifstream input_file(data_file_path);
-  DataConverter data_converter;
+  Dataset data_converter;
   data_converter << input_file;
   map<int, double> image_class_probabilities;
   vector<vector<vector<vector<double>>>> pixel_probabilities;
@@ -105,7 +105,7 @@ TEST_CASE("Writing trained model") {
   std::ifstream input_file(data_file_path);
   std::ofstream output_file(output_file_path);
   
-  DataConverter data_converter;
+  Dataset data_converter;
   data_converter << input_file;
   NaiveBayesClassifier naive_bayes_model;
   naive_bayes_model.Train(data_converter, 10);
@@ -143,7 +143,7 @@ TEST_CASE("Loading from trained model") {
 
 TEST_CASE("Classify one image") {
   NaiveBayesClassifier naive_bayes_model;
-  DataConverter data_converter;
+  Dataset data_converter;
 
   std::ifstream input_file("data/naive_bayes_model.txt");
   std::ifstream test_file("data/test_normal_images.txt");

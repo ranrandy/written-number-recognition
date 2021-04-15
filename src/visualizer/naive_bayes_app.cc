@@ -8,7 +8,8 @@ NaiveBayesApp::NaiveBayesApp()
     : sketchpad_(glm::vec2(kMargin, kMargin), kImageDimension,
                  kWindowSize - 2 * kMargin) {
   ci::app::setWindowSize((int) kWindowSize, (int) kWindowSize);
-  std::ifstream model_path("data/naive_bayes_app_model.txt");
+  std::ifstream model_path(model_path_);
+  // Save as a constant string
   naive_bayes_classifier_ << model_path;
 }
 

@@ -5,8 +5,8 @@ namespace naivebayes {
 KNearestNeighborClassifier::KNearestNeighborClassifier() {}
 
 double KNearestNeighborClassifier::EvaluateAccuracy(
-    const DataConverter& test_data_converter, 
-    const DataConverter& dataset_converter, 
+    const Dataset& test_data_converter, 
+    const Dataset& dataset_converter, 
     size_t k) {
   size_t correct_result_count = 0;
   for (const WrittenNumber& written_number : 
@@ -27,7 +27,7 @@ double KNearestNeighborClassifier::EvaluateAccuracy(
 
 size_t KNearestNeighborClassifier::Classify(
     const WrittenNumber& written_number, 
-    const DataConverter& dataset_converter, 
+    const Dataset& dataset_converter, 
     size_t k) {
   // Stores the distance between each image in the dataset and the image 
   // waiting to be classified.

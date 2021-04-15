@@ -11,7 +11,7 @@ namespace naivebayes {
 /**
  * Convert the raw dataset so that it can be stored properly.
  */
-class DataConverter {
+class Dataset {
  public:
   // The number of pixel colors that will be in the raw dataset.
   // In this case, they are white, grey and black. 
@@ -20,7 +20,7 @@ class DataConverter {
   /**
    * Constructor of this class, only initialize image_size with 0.
    */
-  DataConverter();
+  Dataset();
 
   /**
    * Gets the number of written number classes in the dataset.

@@ -4,7 +4,7 @@ namespace naivebayes {
 
 NaiveBayesClassifier::NaiveBayesClassifier() {}
 
-void NaiveBayesClassifier::Train(const DataConverter& data_converter, 
+void NaiveBayesClassifier::Train(const Dataset& data_converter, 
                                  double laplace_parameter) {
   laplace_parameter_ = laplace_parameter;
   CountClasses(data_converter);
@@ -34,7 +34,7 @@ const std::vector<size_t>& NaiveBayesClassifier::GetClassificationResults()
 }
 
 double NaiveBayesClassifier::EvaluateAccuracy(
-    const DataConverter& data_converter) {
+    const Dataset& data_converter) {
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     size_t classification_result = Classify(written_number.GetImageVector());
     testing_results_.push_back(written_number.GetImageClass());
@@ -80,11 +80,11 @@ size_t NaiveBayesClassifier::Classify(
 }
 
 void NaiveBayesClassifier::OutputConfusingMatrix() {
-  std::vector<size_t> predicted_row(class_count_.size(), 0);
-  std::vector<std::vector<size_t>> matrix(class_count_.size(), predicted_row);
+  std::vector<size_t> predicted_row(class_probabilities_.size(), 0);
+  std::vector<std::vector<size_t>> matrix(class_probabilities_.size(), predicted_row);
   
-  for (size_t actual = 0; actual < class_count_.size(); actual++) {
-    for (size_t predicted = 0; predicted < class_count_.size(); predicted++) {
+  for (size_t actual = 0; actual < class_probabilities_.size(); actual++) {
+    for (size_t predicted = 0; predicted < class_probabilities_.size(); predicted++) {
       size_t total = 0;
       for (size_t i = 0; i < GetTestingResults().size(); i++) {
         if (GetTestingResults().at(i) == actual && 
@@ -99,7 +99,7 @@ void NaiveBayesClassifier::OutputConfusingMatrix() {
   }
 }
 
-void NaiveBayesClassifier::CountClasses(const DataConverter& data_converter) {
+void NaiveBayesClassifier::CountClasses(const Dataset& data_converter) {
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {
     if (written_number.GetImageClass() >= 0) {
       class_count_[written_number.GetImageClass()]++;
@@ -108,7 +108,7 @@ void NaiveBayesClassifier::CountClasses(const DataConverter& data_converter) {
 }
 
 void NaiveBayesClassifier::CalculateProbabilityForClasses(
-    const DataConverter& data_converter) {
+    const Dataset& data_converter) {
   for (auto & class_number : class_count_) {
      class_probabilities_[class_number.first] =
         (laplace_parameter_ + class_number.second) /
@@ -129,7 +129,7 @@ void NaiveBayesClassifier::InitiatePixelProbabilities(size_t image_size,
 }
 
 void NaiveBayesClassifier::CalculateProbabilityForPixels(
-    const DataConverter& data_converter) {
+    const Dataset& data_converter) {
   // Assigns each P(F_{i, j} = f | class = c) with
   // k / (pixel_color_count * k + # classes belonging to class c).
   for (const WrittenNumber& written_number : data_converter.GetDataset()) {

@@ -2,27 +2,27 @@
 
 namespace naivebayes {
 
-DataConverter::DataConverter() {
+Dataset::Dataset() {
   image_size_ = 0;
 }
 
-size_t DataConverter::GetImageClassCount() const {
+size_t Dataset::GetImageClassCount() const {
   return image_classes_.size();
 }
 
-size_t DataConverter::GetMaxWrittenNumber() const {
+size_t Dataset::GetMaxWrittenNumber() const {
   return *max_element(image_classes_.begin(), image_classes_.end());
 }
 
-size_t DataConverter::GetImageSize() const {
+size_t Dataset::GetImageSize() const {
   return image_size_;
 }
 
-const std::vector<WrittenNumber>& DataConverter::GetDataset() const {
+const std::vector<WrittenNumber>& Dataset::GetDataset() const {
   return dataset_;
 }
 
-std::istream& DataConverter::operator<<(std::istream& data_file) {
+std::istream& Dataset::operator<<(std::istream& data_file) {
   size_t image_class;
   std::vector<std::vector<WrittenNumber::PixelColor>> image_vector;
 
@@ -51,7 +51,7 @@ std::istream& DataConverter::operator<<(std::istream& data_file) {
   return data_file;
 }
 
-int DataConverter::ConvertToClass(const std::string &line) {
+int Dataset::ConvertToClass(const std::string &line) {
   bool is_digit = true;
   if (line.empty()) {
     return -1;
@@ -69,7 +69,7 @@ int DataConverter::ConvertToClass(const std::string &line) {
   }
 }
 
-std::vector<WrittenNumber::PixelColor> DataConverter::ConvertToPixels(
+std::vector<WrittenNumber::PixelColor> Dataset::ConvertToPixels(
     const std::string& line) {
   std::vector<WrittenNumber::PixelColor> row_vector;
   for (char character : line) {

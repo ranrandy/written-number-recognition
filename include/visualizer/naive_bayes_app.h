@@ -29,6 +29,7 @@ class NaiveBayesApp : public ci::app::App {
   const size_t kImageDimension = 28;
 
  private:
+  const std::string model_path_ = "data/naive_bayes_app_model.txt";
   NaiveBayesClassifier naive_bayes_classifier_;
   Sketchpad sketchpad_;
   int current_prediction_ = -1;

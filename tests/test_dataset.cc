@@ -3,11 +3,11 @@
 #include "core/dataset.h"
 #include "core/written_number.h"
 
-using naivebayes::DataConverter;
+using naivebayes::Dataset;
 using naivebayes::WrittenNumber;
 
 TEST_CASE("Overload << operator to read the data") {
-  DataConverter data_converter;
+  Dataset data_converter;
   
   SECTION("Empty dataset") {
     std::ifstream input_file("data/test_empty_dataset.txt");

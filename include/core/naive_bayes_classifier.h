@@ -30,14 +30,14 @@ public:
    * @param data_converter a data converter containing preprocessed dataset
    * @param laplace_parameter the laplace smoothing parameter for processing
    */
-  void Train(const DataConverter& data_converter, double laplace_parameter = 0);
+  void Train(const Dataset& data_converter, double laplace_parameter = 0);
 
   /**
    * Test with the testing dataset to obtain the accuracy of the model.
    * @param data_converter a data converter containing preprocessed dataset 
    * @return the accuracy of the model
    */
-  double EvaluateAccuracy(const DataConverter& data_converter);
+  double EvaluateAccuracy(const Dataset& data_converter);
   
   /**
    * Classify one hand written number.
@@ -99,13 +99,13 @@ private:
    * Counts the number of each written number class in the dataset.
    * @param data_converter a data converter containing preprocessed dataset
    */
-  void CountClasses(const DataConverter& data_converter);
+  void CountClasses(const Dataset& data_converter);
   
   /**
    * Calculates P(class = c) for each written number class.
    * @param data_converter a data converter containing preprocessed dataset
    */
-  void CalculateProbabilityForClasses(const DataConverter& data_converter);
+  void CalculateProbabilityForClasses(const Dataset& data_converter);
   
   /**
     * Initiates each P(F_{i, j} = f | class = c) with 0.
@@ -121,7 +121,7 @@ private:
    * Calculates P(F_{i, j} = f | class = c) for each point and class.
    * @param data_converter a data converter containing preprocessed dataset
    */
-  void CalculateProbabilityForPixels(const DataConverter& data_converter);
+  void CalculateProbabilityForPixels(const Dataset& data_converter);
   
   /**
    * Splits a line of string data to several substring data.

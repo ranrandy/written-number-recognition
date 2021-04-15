@@ -25,8 +25,8 @@ class KNearestNeighborClassifier {
    * @param k the parameter k in k nearest neighbors algorithm
    * @return the accuracy of the algorithm
    */
-  double EvaluateAccuracy(const DataConverter& test_data_converter, 
-                          const DataConverter& dataset_converter, 
+  double EvaluateAccuracy(const Dataset& test_data_converter, 
+                          const Dataset& dataset_converter, 
                           size_t k);
   
   /**
@@ -37,7 +37,7 @@ class KNearestNeighborClassifier {
    * @return the classification result of the image
    */
   size_t Classify(const WrittenNumber& written_number, 
-                  const DataConverter& dataset_converter, 
+                  const Dataset& dataset_converter, 
                   size_t k);
   
   /**
