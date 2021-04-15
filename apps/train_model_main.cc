@@ -1,7 +1,7 @@
 #include "core/cmd_parser.h"
-#include "core/data_converter.h"
-#include "core/naive_bayes_classifier.h"
+#include "core/dataset.h"
 #include "core/k_nearest_neighbors_classifier.h"
+#include "core/naive_bayes_classifier.h"
 #include "core/written_number.h"
 
 using namespace naivebayes;

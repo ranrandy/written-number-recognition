@@ -3,7 +3,7 @@
 #include <map>
 #include <sstream>
 
-#include "core/data_converter.h"
+#include "core/dataset.h"
 #include "written_number.h"
 
 namespace naivebayes {

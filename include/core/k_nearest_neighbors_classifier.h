@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "core/data_converter.h"
+#include "core/dataset.h"
 #include "core/written_number.h"
 
 namespace naivebayes {

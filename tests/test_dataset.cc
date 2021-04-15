@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "core/data_converter.h"
+#include "core/dataset.h"
 #include "core/written_number.h"
 
 using naivebayes::DataConverter;
