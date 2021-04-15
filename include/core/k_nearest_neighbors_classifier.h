@@ -16,7 +16,7 @@ class KNearestNeighborClassifier {
    * Default Constructor. Constructs a new k nearest neighbor classifier.
    */
   KNearestNeighborClassifier();
-
+  
   /**
    * Evaluates the accuracy of using one dataset to classify another
    * testing dataset.
@@ -40,9 +40,31 @@ class KNearestNeighborClassifier {
                   const DataConverter& dataset_converter, 
                   size_t k);
   
+  /**
+   * Gets a vector of correct classification results.
+   * @return a vector of correct classification results
+   */
+  const std::vector<size_t>& GetTestingResults() const;
+
+  /**
+   * Gets a vector of classfication results based on this model.
+   * @return a vector of classification results based on this model
+   */
+  const std::vector<size_t>& GetClassificationResults() const;
+  
+  /**
+   * Output the confusing matrix for the current classification.
+   */
+  void OutputConfusingMatrix();
+  
  private:   
+  const size_t class_total = 10;
+  
   std::pair<double, size_t> CalculateDistance(
        const WrittenNumber& test_number, const WrittenNumber& data_number);
+  
+  std::vector<size_t> classification_results_;
+  std::vector<size_t> testing_results_;
 };
 
 } // namespace knn

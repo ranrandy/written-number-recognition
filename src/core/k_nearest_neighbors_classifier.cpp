@@ -13,6 +13,9 @@ double KNearestNeighborClassifier::EvaluateAccuracy(
        test_data_converter.GetDataset()) {
     size_t classified_result = Classify(written_number, dataset_converter, k);
     
+    testing_results_.push_back(written_number.GetImageClass());
+    classification_results_.push_back(classified_result);
+    
     // Stores if this number is correctly classified.
     if (classified_result == written_number.GetImageClass()) {
       correct_result_count++;
@@ -61,6 +64,35 @@ size_t KNearestNeighborClassifier::Classify(
   return classified_result;
 }
 
+const std::vector<size_t>& KNearestNeighborClassifier::GetTestingResults() 
+    const {
+  return testing_results_;
+}
+
+const std::vector<size_t>& KNearestNeighborClassifier::
+    GetClassificationResults() const {
+  return classification_results_;
+}
+
+void KNearestNeighborClassifier::OutputConfusingMatrix() {
+  std::vector<size_t> predicted_row(class_total, 0);
+  std::vector<std::vector<size_t>> matrix(class_total, predicted_row);
+
+  for (size_t actual = 0; actual < class_total; actual++) {
+    for (size_t predicted = 0; predicted < class_total; predicted++) {
+      size_t total = 0;
+      for (size_t i = 0; i < GetTestingResults().size(); i++) {
+        if (GetTestingResults().at(i) == actual &&
+            GetClassificationResults().at(i) == predicted) {
+          total++;
+        }
+      }
+      matrix[actual][predicted] = total;
+      std::cout << total << "\t";
+    }
+    std::cout << std::endl;
+  }
+}
 
 std::pair<double, size_t> KNearestNeighborClassifier::CalculateDistance(
     const WrittenNumber& test_number, const WrittenNumber& data_number) {
