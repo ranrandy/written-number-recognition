@@ -95,10 +95,10 @@ void NaiveBayesClassifier::InitiatePixelProbabilities(size_t image_size,
                                                size_t max_number) {
   // Initializes a 4D vector whose size info for each layer is 
   // (image_size * image_size * pixel_color_count * greatest_written_number)
-  pixel_probabilities_ = vec4(image_size, 
-                              vec3(image_size, 
-                                   vec2(color_count, 
-                                        vector<double>(max_number + 1, 0))));
+  vector<double> number_class(max_number + 1, 0);
+  vec2 color_number(color_count, number_class);
+  vec3 column(image_size, color_number);
+  pixel_probabilities_ = vec4(image_size, column);
 }
 
 void NaiveBayesClassifier::CalculateProbabilityForPixels(
