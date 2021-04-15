@@ -18,6 +18,33 @@ TEST_CASE("Overload << operator to read the data") {
     REQUIRE(data_converter.GetMaxWrittenNumber() == 0);
   }
   
+  SECTION("3x3 images data") {
+    std::ifstream input_file("data/test_3x3_images.txt");
+    data_converter << input_file;
+    REQUIRE(data_converter.GetImageSize() == 3);
+    REQUIRE(data_converter.GetImageClassCount() == 2);
+    
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[0][1] == 
+            WrittenNumber::PixelColor::kBlack);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[1][1] ==
+            WrittenNumber::PixelColor::kBlack);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[2][1] ==
+            WrittenNumber::PixelColor::kBlack);
+    
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[0][0] ==
+            WrittenNumber::PixelColor::kWhite);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[0][2] ==
+            WrittenNumber::PixelColor::kWhite);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[1][0] ==
+            WrittenNumber::PixelColor::kWhite);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[1][2] ==
+            WrittenNumber::PixelColor::kWhite);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[2][0] ==
+            WrittenNumber::PixelColor::kWhite);
+    REQUIRE(data_converter.GetDataset()[0].GetImageVector()[2][2] ==
+            WrittenNumber::PixelColor::kWhite);
+  }
+  
   SECTION("Normal image size data (size = 28)") {
     std::ifstream input_file("data/test_normal_images.txt");
     data_converter << input_file;
