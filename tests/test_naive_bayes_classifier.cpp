@@ -50,6 +50,9 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c), "
     naive_bayes_model.Train(data_converter);
     pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(pixel_probabilities[14][16][2][4] == Approx(1).epsilon(0.01));
+    REQUIRE(pixel_probabilities[12][10][0][4] == Approx(0.5).epsilon(0.01));
+    REQUIRE(pixel_probabilities[11][9][1][4] == Approx(0).epsilon(0.01));
+    REQUIRE(pixel_probabilities[8][16][2][4] == Approx(0).epsilon(0.01));
   }
 
   SECTION("After laplace smoothing") {
@@ -57,6 +60,9 @@ TEST_CASE("Calculate P(F_{i, j} = f | class = c), "
     naive_bayes_model.Train(data_converter, 10);
     pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(pixel_probabilities[14][16][2][4] == Approx(0.375).epsilon(0.01));
+    REQUIRE(pixel_probabilities[12][10][0][4] == Approx(0.344).epsilon(0.01));
+    REQUIRE(pixel_probabilities[11][9][1][4] == Approx(0).epsilon(0.01));
+    REQUIRE(pixel_probabilities[8][16][2][4] == Approx(0).epsilon(0.01));
   }
 }
 
@@ -75,6 +81,9 @@ TEST_CASE("Processing for arbitrary image sizes") {
     pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(image_class_probabilities[4] == Approx(0.667).epsilon(0.01));
     REQUIRE(pixel_probabilities[11][11][1][4] == Approx(1).epsilon(0.01));
+    REQUIRE(pixel_probabilities[12][10][0][4] == Approx(1).epsilon(0.01));
+    REQUIRE(pixel_probabilities[11][9][1][4] == Approx(0).epsilon(0.01));
+    REQUIRE(pixel_probabilities[8][16][2][4] == Approx(1).epsilon(0.01));
   }
 
   SECTION("After laplace smoothing") {
@@ -84,6 +93,9 @@ TEST_CASE("Processing for arbitrary image sizes") {
     pixel_probabilities = naive_bayes_model.GetConditionalProbability();
     REQUIRE(image_class_probabilities[1] == Approx(0.4782).epsilon(0.01));
     REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.375).epsilon(0.01));
+    REQUIRE(pixel_probabilities[12][10][0][4] == Approx(0.375).epsilon(0.01));
+    REQUIRE(pixel_probabilities[11][9][1][4] == Approx(0).epsilon(0.01));
+    REQUIRE(pixel_probabilities[8][16][2][4] == Approx(0.375).epsilon(0.01));
   }
 }
 
@@ -124,6 +136,9 @@ TEST_CASE("Loading from trained model") {
  
   REQUIRE(image_class_probabilities[4] == Approx(0.1069).epsilon(0.001));
   REQUIRE(pixel_probabilities[11][11][1][4] == Approx(0.1914).epsilon(0.001));
+  REQUIRE(pixel_probabilities[12][10][0][4] == Approx(0.297).epsilon(0.01));
+  REQUIRE(pixel_probabilities[11][9][1][4] == Approx(0.283).epsilon(0.01));
+  REQUIRE(pixel_probabilities[8][16][2][4] == Approx(0.149).epsilon(0.01));
 }
 
 TEST_CASE("Classify one image") {
