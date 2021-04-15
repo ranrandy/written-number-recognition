@@ -62,7 +62,8 @@ list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
 list(APPEND TEST_FILES tests/test_data_converter.cc
                        tests/test_naive_bayes_classifier.cpp
                        tests/test_cmd_parser.cpp
-                       tests/test_k_nearest_neighbors_classifier.cpp)
+                       tests/test_k_nearest_neighbors_classifier.cpp
+                       tests/test_sketchpad.cpp)
 
 add_executable(train-model apps/train_model_main.cc ${CORE_SOURCE_FILES})
 target_include_directories(train-model PRIVATE include)
